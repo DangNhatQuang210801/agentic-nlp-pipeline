@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Data and outputs
+data/**/raw/
+data/**/*.conllu
+data/**/*.conll
+data/**/*.zip
+data/**/*.tar
+data/**/*.tar.gz
+results/**/*.csv
+results/**/*.json
+results/**/*.jsonl
+results/**/*.tsv
+
+# Keep placeholder files
+!**/.gitkeep
+!data/**/README.md
