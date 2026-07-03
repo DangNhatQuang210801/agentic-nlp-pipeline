@@ -1,0 +1,44 @@
+[project]
+name = "agentic-nlp-pipeline"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"},
+    {name = "Your Name",email = "you@example.com"},
+    {name = "Your Name",email = "you@example.com"},
+    {name = "Jan Raring",email = "janraring@yahoo.de"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipython",
+    "isort",
+    "jupyterlab",
+    "matplotlib",
+    "notebook",
+    "numpy",
+    "pandas",
+    "pip",
+    "pytest",
+    "python-dotenv",
+    "scikit-learn",
+    "stanza (>=1.11.1,<2.0.0)",
+    "torch (==2.7.1+xpu)",
+    "torchvision (==0.22.1+xpu)",
+    "torchaudio (==2.7.1+xpu)",
+    "transformers (>=5.8.0,<6.0.0)",
+    "accelerate (>=1.13.0,<2.0.0)",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "xpu"
+url = "https://download.pytorch.org/whl/xpu"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
