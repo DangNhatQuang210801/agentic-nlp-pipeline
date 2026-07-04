@@ -1,0 +1,214 @@
+from stanza.models.common.doc import Sentence
+
+
+def _has_valid_heads(sent: Sentence) -> tuple[bool, str]:
+    """Check if the HEAD attributes of a Sentence are in the right range.
+
+    Args:
+        sent: Some Stanza Sentence.
+
+    Returns:
+        has_valid_heads: Whether or not the HEADs are all valid.
+        msg: A detailed success or error message.
+    """
+    invalid_ids = []
+    invalid_heads = []
+    max_id = max(w.id for w in sent.words)
+
+    for word in sent.words:
+        if word.head > max_id:
+            invalid_ids.append(word.id)
+            invalid_heads.append(word.head)
+
+    n_invalid = len(invalid_ids)
+
+    if n_invalid == 0:
+        msg = "All HEAD values are in the right range."
+    elif n_invalid == 1:
+        # GenAI has been used to polish this error message.
+        msg = (
+            f"Invalid HEAD value at word index {invalid_ids[0]}: "
+            f"expected 0 (root) or a value between 1 and {max_id} "
+            f"(the number of words in the sentence), got {invalid_heads[0]}."
+        )
+    else:
+        msg = (
+            f"Invalid HEAD values at word indices {invalid_ids}: "
+            f"expected 0 (root) or a value between 1 and {max_id} "
+            f"(the number of words in the sentence), got {invalid_heads}."
+        )
+
+    has_valid_heads = n_invalid == 0
+    return has_valid_heads, msg
+
+
+def _has_single_root(sent: Sentence) -> tuple[bool, str]:
+    """Check if a Sentence as one and only one root.
+
+    Args:
+        sent: Some Stanza Sentence.
+
+    Returns:
+        has_single_root: Whether or not the HEADs are all valid.
+        msg: A detailed success or error message.
+    """
+    n_roots = sum(1 if w.head == 0 else 0 for w in sent.words)
+    roots = [w.id for w in sent.words if w.head == 0]
+
+    if n_roots == 1:
+        msg = "The dependency tree has exactly one root (as it should)."
+    elif n_roots == 0:
+        msg = "The dependency tree does not have a root, but is should have."
+    else:
+        msg = (
+            f"The tree has {n_roots} roots (indices {roots}), "
+            "but it should only have one."
+        )
+
+    has_single_root = n_roots == 1
+    return has_single_root, msg
+
+
+def _is_acyclic(sent: Sentence) -> tuple[bool, str]:
+    """Check if the dependency graph of a Sentence contains any cycles.
+
+    Args:
+        sent: Some Stanza Sentence.
+
+    Returns:
+        is_acyclic: Whether or not the dependency graph is acyclic.
+        msg: A detailed success or error message.
+    """
+    for word in sent.words:
+        head = word.id
+        chain = [head]
+
+        while (head := sent.words[head - 1].head) not in chain + [0]:
+            chain.append(head)
+
+        # Return early if a cycle has been found
+        final_head = sent.words[chain[-1] - 1].head
+        if final_head != 0:
+            cycle_len = len(chain)
+            if cycle_len == 1:
+                msg = f"Found an isolated word at index {chain[-1]}."
+            else:
+                msg = (
+                    f"Found a cycle in the dependency graph even though it should "
+                    f"be acyclic. The cycle is made up of the word indices {chain}."
+                )
+            is_acyclic = False
+            return is_acyclic, msg
+
+    is_acyclic = True
+    msg = "The dependency tree is acyclic (as it should be)."
+    return is_acyclic, msg
+
+
+def validate_sentence(sent: Sentence) -> tuple[bool, str]:
+    """Check if a Sentence has a valid dependency tree.
+
+    Args:
+        sent: Some Stanza Sentence.
+
+    Returns:
+        valid: Whether or not the dependency tree is valid.
+        msg: A detailed success or error message.
+    """
+    for check in [_has_valid_heads, _has_single_root, _is_acyclic]:
+        valid, msg = check(sent)
+        if not valid:
+            return valid, msg
+
+    valid = True
+    msg = "The sentences dependency graph has a valid tree structure."
+    return valid, msg
+
+
+if __name__ == "__main__":
+    # One HEAD out of range
+    sent1 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 0},
+            {"id": 2, "text": "B", "head": 1},
+            {"id": 3, "text": "C", "head": 2},
+            {"id": 4, "text": "D", "head": 6},
+        ]
+    )
+    # Multiple HEADs out of range
+    sent2 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 0},
+            {"id": 2, "text": "B", "head": 7},
+            {"id": 3, "text": "C", "head": 1},
+            {"id": 4, "text": "D", "head": 6},
+        ]
+    )
+    # No head
+    sent3 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 3},
+            {"id": 2, "text": "B", "head": 1},
+            {"id": 3, "text": "C", "head": 2},
+            {"id": 4, "text": "D", "head": 3},
+        ]
+    )
+    # Too many heads
+    sent4 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 0},
+            {"id": 2, "text": "B", "head": 1},
+            {"id": 3, "text": "C", "head": 2},
+            {"id": 4, "text": "D", "head": 0},
+        ]
+    )
+    # Single isolated node
+    sent5 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 0},
+            {"id": 2, "text": "B", "head": 1},
+            {"id": 3, "text": "C", "head": 1},
+            {"id": 4, "text": "D", "head": 4},
+        ]
+    )
+    # Cyclic graph
+    sent6 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 0},
+            {"id": 2, "text": "B", "head": 4},
+            {"id": 3, "text": "C", "head": 2},
+            {"id": 4, "text": "D", "head": 3},
+        ]
+    )
+    # Good sentence
+    sent7 = Sentence(
+        [
+            {"id": 1, "text": "A", "head": 0},
+            {"id": 2, "text": "B", "head": 1},
+            {"id": 3, "text": "C", "head": 2},
+            {"id": 4, "text": "D", "head": 3},
+        ]
+    )
+
+    # Check if sentence has valid HEAD
+    assert not _has_valid_heads(sent1)[0]
+    assert not _has_valid_heads(sent2)[0]
+    assert _has_valid_heads(sent7)[0]
+
+    # Check if sentence has a single root
+    assert not _has_single_root(sent3)[0]
+    assert not _has_single_root(sent4)[0]
+    assert _has_single_root(sent7)[0]
+
+    # Check for cycles
+    assert not _is_acyclic(sent5)[0]
+    assert not _is_acyclic(sent6)[0]
+    assert _is_acyclic(sent7)[0], _is_acyclic(sent7)[1]
+
+    # Full check
+    sentences = [sent1, sent2, sent3, sent4, sent5, sent6, sent7]
+    for sent in sentences:
+        validity, msg = validate_sentence(sent)
+        print(msg)
+
+    print("All tests passed!")
