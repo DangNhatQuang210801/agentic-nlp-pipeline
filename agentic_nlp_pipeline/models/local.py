@@ -26,7 +26,9 @@ class LocalModel:
         self.model.eval()
         print(f"Loaded model onto `{next(self.model.parameters()).device}`")
 
-    def generate(self, messages: list[dict[str, str]], max_new_tokens: int = 200):
+    def generate(
+        self, messages: list[dict[str, str]], max_new_tokens: int = 200
+    ) -> str:
         """Generate a model response.
 
         Args:

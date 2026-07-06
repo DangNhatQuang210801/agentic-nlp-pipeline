@@ -2,4 +2,6 @@ from typing import Protocol
 
 
 class LanguageModel(Protocol):
-    def complete(self): ...
+    """Base protocol for all language models"""
+
+    def generate(self) -> str: ...
