@@ -1,5 +1,6 @@
 from pathlib import Path
 from collections import Counter
+import sys
 
 
 FIELDS = ("ID", "FORM", "LEMMA", "UPOS", "XPOS", "FEATS", "HEAD", "DEPREL", "DEPS", "MISC")
@@ -51,6 +52,9 @@ def inspect_file(path):
 
 
 def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     repo = Path(__file__).resolve().parents[1] / "data" / "vietnamese" / "raw" / "UD_Vietnamese-VTB"
     files = sorted(repo.rglob("*.conllu"))
 
