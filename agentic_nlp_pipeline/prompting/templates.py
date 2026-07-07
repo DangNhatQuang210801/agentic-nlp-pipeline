@@ -1,3 +1,19 @@
+"""Different system prompts and templates."""
+
+"""System prompt for direct dependency parsing.
+
+TODO: Right now it only predicts the HEAD but not the DEPREL.
+      Maybe this should be included as well, but from trying
+      different things it seems that the prompt engineering
+      around this is quite a bit harder than just the HEAD part.
+
+Input:
+    The string representation of a {ID: FORM} dictionary.
+
+Output:
+    A new-line-separated list of (ID, HEAD) tuples encoding the
+    edges of the dependency tree.
+"""
 DIRECT_PARSING_SYSTEM_PROMPT = (
     "You are a precise annotator assistent. "
     "Your purpose is to assist a corpus linguist in the creation of dependency trees.\n\n"
