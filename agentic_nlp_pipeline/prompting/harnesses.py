@@ -2,6 +2,7 @@ from stanza.models.common.doc import Sentence
 
 from agentic_nlp_pipeline import LocalModel, LanguageModel
 from templates import DIRECT_PARSING_SYSTEM_PROMPT
+from parsing import parse_tree_from_text, insert_tree_into_sentence
 
 
 def _sent_to_dict(sent: Sentence) -> dict[int, str]:
@@ -17,7 +18,9 @@ def _sent_to_dict(sent: Sentence) -> dict[int, str]:
     return {word.id: word.text for word in sent.words}
 
 
-def direct_parsing(model: LanguageModel, sent: Sentence, max_new_tokens: int):
+def direct_dep_parsing(
+    model: LanguageModel, sent: Sentence, max_new_tokens: int, verbose: bool = False
+) -> Sentence:
     """One-shot dependency parsing.
 
     This harness is meant for direct dependency parsing: Give the
@@ -28,14 +31,20 @@ def direct_parsing(model: LanguageModel, sent: Sentence, max_new_tokens: int):
 
     TODO: Right now it is designed to only predict the edges (HEAD)
           but perhaps we should also include the relations (DEPREL).
+          ANSWER: In order to reduce scope, maybe we should focus on
+          HEAD right now.
 
     Args:
         model: Some LanguageModel.
         sent: Some Stanza Sentence.
-        max_new_tokens: The maximum number of new tokens to be generated.
+        max_new_tokens: The maximum number of new tokens to be
+            generated.
+        verbose: Whether this function is supposed to produce an
+            output or not.
 
     Returns:
-        (right now it's a string, later it should be a Stanza Sentence.
+        A copy of the input sentence with HEAD attribute set
+        according to the models output.
     """
     content = str(_sent_to_dict(sent))
 
@@ -44,14 +53,22 @@ def direct_parsing(model: LanguageModel, sent: Sentence, max_new_tokens: int):
         {"role": "user", "content": content},
     ]
 
-    # TODO: Parse output
+    response = model.generate(messages, max_new_tokens)
 
-    return model.generate(messages, max_new_tokens)
+    tree = parse_tree_from_text(response)
+    parsed_sent = insert_tree_into_sentence(sent, tree)
+
+    if verbose:
+        print(f"\n🖥️ System: {DIRECT_PARSING_SYSTEM_PROMPT}")
+        print(f"👨‍🦲 User: {content}")
+        print(f"🤖 Bot : {response}")
+        print(f"\nResult:\n{parsed_sent}")
+
+    return parsed_sent
 
 
 if __name__ == "__main__":
-    # MODEL_ID = "Qwen/Qwen3-0.6B"
-    MODEL_ID = "Qwen/Qwen3-2B"
+    MODEL_ID = "Qwen/Qwen3.5-2B"
     model = LocalModel(MODEL_ID)
 
     sent1 = Sentence(
@@ -64,8 +81,6 @@ if __name__ == "__main__":
         ]
     )
 
-    reply = direct_parsing(model, sent1, 500)
-
-    print(f"\n🖥️ System: {DIRECT_PARSING_SYSTEM_PROMPT}")
-    print(f"👨‍🦲 User: {_sent_to_dict(sent1)}")
-    print(f"🤖 Bot : {reply}")
+    parsed_sent = direct_dep_parsing(
+        model=model, sent=sent1, max_new_tokens=500, verbose=True
+    )
