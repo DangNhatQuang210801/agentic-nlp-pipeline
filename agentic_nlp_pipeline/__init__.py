@@ -1,5 +1,5 @@
-from .data.projectivity import isprojective, projectivity_rate
-from .data.tree_validation import validate_sentence
+from .evaluation.projectivity import isprojective, projectivity_rate
+from .validation.tree_validation import validate_sentence
 from .models.base import LanguageModel
 from .models.local import LocalModel
 from .models.api import APIModel
