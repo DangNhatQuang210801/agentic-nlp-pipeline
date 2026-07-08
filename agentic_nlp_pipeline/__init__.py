@@ -3,6 +3,7 @@ from .validation.tree_validation import validate_sentence
 from .models.base import LanguageModel
 from .models.local import LocalModel
 from .models.api import APIModel
+from .prompting.tools import KNNRetrievalTool
 
 __all__ = [
     "isprojective",
@@ -11,4 +12,5 @@ __all__ = [
     "LanguageModel",
     "LocalModel",
     "APIModel",
+    "KNNRetrievalTool",
 ]
