@@ -8,6 +8,7 @@ from agentic_nlp_pipeline.validation.tree_validation import (
     _is_acyclic,
     _has_valid_heads,
 )
+from agentic_nlp_pipeline.prompting.tools import KNNRetrievalTool
 
 
 # ====================================================================
@@ -163,3 +164,32 @@ def test_is_acyclic():
     assert not _is_acyclic(sent9)[0]
     assert not _is_acyclic(sent10)[0]
     assert _is_acyclic(sent11)[0], _is_acyclic(sent11)[1]
+
+
+# ====================================================================
+#  tools.py
+# ====================================================================
+
+
+def test_knn_retrieval_tool(tmp_path):
+    train = tmp_path / "toy.conllu"
+    train.write_text(
+        """# sent_id = s1
+# text = I like cats
+1	I	I	PRON	_	_	2	nsubj	_	_
+2	like	like	VERB	_	_	0	root	_	_
+3	cats	cat	NOUN	_	_	2	obj	_	_
+
+# sent_id = s2
+# text = Birds fly
+1	Birds	bird	NOUN	_	_	2	nsubj	_	_
+2	fly	fly	VERB	_	_	0	root	_	_
+""",
+        encoding="utf-8",
+    )
+    tool = KNNRetrievalTool.from_conllu_files({"english": train})
+
+    results = tool.retrieve("english", ["I", "like", "dogs"], ["PRON", "VERB", "NOUN"], k=1)
+
+    assert results[0]["sent_id"] == "s1"
+    assert results[0]["tokens"][1]["DEPREL"] == "root"
