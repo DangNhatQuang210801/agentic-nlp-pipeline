@@ -1,3 +1,4 @@
+from typing import Optional
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -27,7 +28,10 @@ class LocalModel:
         print(f"Loaded model onto `{next(self.model.parameters()).device}`")
 
     def generate(
-        self, messages: list[dict[str, str]], max_new_tokens: int = 200
+        self,
+        messages: list[dict[str, str]],
+        max_new_tokens: int = 200,
+        tools: Optional[list[dict]] = None,
     ) -> str:
         """Generate a model response.
 
@@ -39,7 +43,7 @@ class LocalModel:
             The model response as a string.
         """
         text = self.tokenizer.apply_chat_template(
-            messages, add_generation_prompt=True, tokenize=False
+            messages, tools=tools, add_generation_prompt=True, tokenize=False
         )
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
         prompt_len = inputs["input_ids"].shape[1]
