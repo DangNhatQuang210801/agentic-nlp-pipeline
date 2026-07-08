@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 import json
 from pathlib import Path
+from stanza.models.common.doc import Document, Sentence
+from stanza.utils.conll import CoNLL
 
 
 TOOL_TEMPLATE = {
@@ -48,53 +50,35 @@ def _features(forms: list[str], upos: list[str] | None, max_n: int):
     return features
 
 
-def _read_conllu(path: Path, max_n: int) -> list[IndexedSentence]:
-    sentences = []
-    meta = {}
-    tokens = []
+def _token(word) -> dict[str, str]:
+    return {
+        "ID": str(word.id),
+        "FORM": word.text or "_",
+        "LEMMA": word.lemma or "_",
+        "UPOS": word.upos or "_",
+        "XPOS": word.xpos or "_",
+        "FEATS": word.feats or "_",
+        "HEAD": str(word.head),
+        "DEPREL": word.deprel or "_",
+    }
 
-    def flush():
-        if not tokens:
-            return
-        forms = [token["FORM"] for token in tokens]
-        upos = [token["UPOS"] for token in tokens]
-        sentences.append(
-            IndexedSentence(
-                sent_id=meta.get("sent_id", ""),
-                text=meta.get("text", " ".join(forms)),
-                forms=forms,
-                upos=upos,
-                tokens=tokens.copy(),
-                features=_features(forms, upos, max_n),
-            )
-        )
 
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if not line:
-            flush()
-            meta = {}
-            tokens = []
-            continue
-        if line.startswith("#"):
-            if "=" in line:
-                key, value = line[1:].split("=", 1)
-                meta[key.strip()] = value.strip()
-            continue
+def _index_sentence(sent: Sentence, max_n: int) -> IndexedSentence:
+    tokens = [_token(word) for word in sent.words]
+    forms = [token["FORM"] for token in tokens]
+    upos = [token["UPOS"] for token in tokens]
+    return IndexedSentence(
+        sent_id=getattr(sent, "sent_id", ""),
+        text=getattr(sent, "text", None) or " ".join(forms),
+        forms=forms,
+        upos=upos,
+        tokens=tokens,
+        features=_features(forms, upos, max_n),
+    )
 
-        cols = line.split("\t")
-        if len(cols) != 10 or "-" in cols[0] or "." in cols[0]:
-            continue
-        tokens.append(
-            dict(
-                zip(
-                    ("ID", "FORM", "LEMMA", "UPOS", "XPOS", "FEATS", "HEAD", "DEPREL", "DEPS", "MISC"),
-                    cols,
-                )
-            )
-        )
 
-    flush()
-    return sentences
+def _index_doc(doc: Document, max_n: int) -> list[IndexedSentence]:
+    return [_index_sentence(sent, max_n) for sent in doc.sentences]
 
 
 class KNNRetrievalTool:
@@ -136,7 +120,17 @@ class KNNRetrievalTool:
     @classmethod
     def from_conllu_files(cls, train_files: dict[str, str | Path], max_n: int = 3):
         return cls(
-            {language: _read_conllu(Path(path), max_n) for language, path in train_files.items()},
+            {
+                language: _index_doc(CoNLL.conll2doc(input_file=str(path)), max_n)
+                for language, path in train_files.items()
+            },
+            max_n=max_n,
+        )
+
+    @classmethod
+    def from_documents(cls, documents: dict[str, Document], max_n: int = 3):
+        return cls(
+            {language: _index_doc(doc, max_n) for language, doc in documents.items()},
             max_n=max_n,
         )
 
