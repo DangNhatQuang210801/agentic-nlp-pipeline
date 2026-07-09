@@ -2,6 +2,7 @@
 
 from stanza.models.common.doc import Document, Sentence
 
+from agentic_nlp_pipeline.prompting.agent import DepParseAgent
 from agentic_nlp_pipeline.evaluation.projectivity import isprojective, projectivity_rate
 from agentic_nlp_pipeline.validation.tree_validation import (
     _has_single_root,
@@ -167,6 +168,27 @@ def test_is_acyclic():
 
 
 # ====================================================================
+#  agent.py
+# ====================================================================
+
+
+def test_parse_tool_calls():
+    json_tool_call = """<tool_call>
+    {"name": "tree_parser", "arguments": {"sentence": "My name is C3PO."}}
+    </tool_call>"""
+    xml_tool_call = """<tool_call>
+<function=tree_parser>
+<parameter=sentence>
+My name is C3PO.
+</parameter>
+</function>
+</tool_call>"""
+    expected = [{"name": "tree_parser", "arguments": {"sentence": "My name is C3PO."}}]
+    assert DepParseAgent._parse_tool_calls(json_tool_call) == expected
+    assert DepParseAgent._parse_tool_calls(xml_tool_call) == expected
+
+
+# ====================================================================
 #  tools.py
 # ====================================================================
 
@@ -189,7 +211,9 @@ def test_knn_retrieval_tool(tmp_path):
     )
     tool = KNNRetrievalTool.from_conllu_files({"english": train})
 
-    results = tool.retrieve("english", ["I", "like", "dogs"], ["PRON", "VERB", "NOUN"], k=1)
+    results = tool.retrieve(
+        "english", ["I", "like", "dogs"], ["PRON", "VERB", "NOUN"], k=1
+    )
 
     assert results[0]["sent_id"] == "s1"
     assert results[0]["tokens"][1]["DEPREL"] == "root"

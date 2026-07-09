@@ -1,5 +1,4 @@
 import json
-from typing import overload
 
 import regex as re
 from stanza.models.common.doc import Sentence
@@ -23,7 +22,8 @@ class DepParseAgent:
         self.max_new_tokens = max_new_tokens
         self.max_iters_per_call = max_iters_per_call
 
-    def _sent_to_dict(self, sent: Sentence) -> dict[int, str]:
+    @staticmethod
+    def _sent_to_dict(sent: Sentence) -> dict[int, str]:
         """Convert a CoNLL-U Sentence into a {id: text} dict.
 
         Args:
@@ -35,30 +35,41 @@ class DepParseAgent:
         """
         return {word.id: word.text for word in sent.words}
 
-    def _parse_tool_calls(self, response: str):
+    @staticmethod
+    def _parse_tool_calls(response: str) -> list[dict]:
         pattern = r"<tool_call>\s*(.*?)\s*</tool_call>"  # parse the tool call by <tool_call> and </tool_call>
         matches = re.findall(pattern, response, re.DOTALL)
         tool_calls = []
         for raw in matches:
+            # parse JSON
             try:
                 tool_calls.append(json.loads(raw))
+                continue
             except json.JSONDecodeError:
                 pass
+            # parse XML
+            try:
+                name = re.findall(r"<function=(.*?)>", raw)[0]
+                body = re.findall(r"<function=.*?>.</function>", raw, re.DOTALL)[0]
+                arguments = re.findall(
+                    r"<parameter=(.*?)>(.*?)</parameter>", body, re.DOTALL
+                )
+                tool_call = {
+                    "name": name.strip(),
+                    "arguments": {
+                        arg_name.strip(): arg.strip() for arg_name, arg in arguments
+                    },
+                }
+                tool_calls.append(tool_call)
+                continue
+            except IndexError:
+                pass
+            print(f"⚠️ UNPARSABLE TOOL CALL: {raw}")
         return tool_calls
 
     def register_tool(self, tool, method):
         self.TOOLS.append(tool)
         self.TOOL_REGISTRY[tool["function"]["name"]] = method
-
-    # @overload
-    # def register_tools(self, tools: dict): ...
-    # @overload
-    # def register_tools(self, tools: list[dict]): ...
-    # def register_tools(self, tools: dict | list[dict]):
-    #     if isinstance(tools, dict):
-    #         self.TOOL_REGISTRY.append(tools)
-    #     if isinstance(tools, list):
-    #         self.TOOL_REGISTRY.extend(tools)
 
     # Code inspired by the exercise from Lecture 07
     def run(self, sent: Sentence):
@@ -92,6 +103,7 @@ class DepParseAgent:
             for tc in tool_calls:
                 fn_name = tc.get("name")
                 fn_args = tc.get("arguments", {})
+                assert isinstance(fn_name, str)
                 if isinstance(fn_args, str):
                     fn_args = json.loads(fn_args)
 
@@ -120,9 +132,9 @@ if __name__ == "__main__":
     # Currently, only Qwen2.5 is handled properly.
     # TODO: make _parse_tool_calls more robust.
 
-    # MODEL_ID = "Qwen/Qwen3.5-2B"
+    MODEL_ID = "Qwen/Qwen3.5-2B"
     # MODEL_ID = "Qwen/Qwen3-0.6B"
-    MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"
+    # MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"  # JSON-formatted tool calls
     model = LocalModel(MODEL_ID)
 
     agent = DepParseAgent(
