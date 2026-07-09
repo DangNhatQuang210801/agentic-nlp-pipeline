@@ -1,6 +1,6 @@
 """Tests for smaller utility functions."""
 
-from stanza.models.common.doc import Document, Sentence
+from stanza.models.common.doc import Document, ID, Sentence, TEXT, UPOS
 
 from agentic_nlp_pipeline.prompting.agent import DepParseAgent
 from agentic_nlp_pipeline.evaluation.projectivity import isprojective, projectivity_rate
@@ -211,9 +211,14 @@ def test_knn_retrieval_tool(tmp_path):
     )
     tool = KNNRetrievalTool.from_conllu_files({"english": train})
 
-    results = tool.retrieve(
-        "english", ["I", "like", "dogs"], ["PRON", "VERB", "NOUN"], k=1
+    query = Sentence(
+        [
+            {ID: 1, TEXT: "I", UPOS: "PRON"},
+            {ID: 2, TEXT: "like", UPOS: "VERB"},
+            {ID: 3, TEXT: "dogs", UPOS: "NOUN"},
+        ]
     )
+    results = tool.retrieve("english", query, k=1)
 
-    assert results[0]["sent_id"] == "s1"
-    assert results[0]["tokens"][1]["DEPREL"] == "root"
+    assert results[0][1].sent_id == "s1"
+    assert results[0][1].words[1].deprel == "root"

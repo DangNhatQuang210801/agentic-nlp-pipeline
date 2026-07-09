@@ -1,9 +1,8 @@
 """Small callable tools for prompting agents."""
 
-from dataclasses import dataclass
 import json
 from pathlib import Path
-from stanza.models.common.doc import Document, Sentence
+from stanza.models.common.doc import Document, ID, Sentence, TEXT, UPOS
 from stanza.utils.conll import CoNLL
 
 
@@ -26,16 +25,6 @@ TOOL_TEMPLATE = {
 }
 
 
-@dataclass
-class IndexedSentence:
-    sent_id: str
-    text: str
-    forms: list[str]
-    upos: list[str]
-    tokens: list[dict[str, str]]
-    features: set[tuple[str, tuple[str, ...]]]
-
-
 def _ngrams(items: list[str], max_n: int) -> set[tuple[str, ...]]:
     grams = set()
     for n in range(1, max_n + 1):
@@ -43,42 +32,34 @@ def _ngrams(items: list[str], max_n: int) -> set[tuple[str, ...]]:
     return grams
 
 
-def _features(forms: list[str], upos: list[str] | None, max_n: int):
-    features = {("form", gram) for gram in _ngrams([f.casefold() for f in forms], max_n)}
-    if upos:
-        features.update(("upos", gram) for gram in _ngrams(upos, max_n))
+def _features(sent: Sentence, max_n: int) -> set[tuple[str, tuple[str, ...]]]:
+    features = {
+        ("FORM", gram)
+        for gram in _ngrams(
+            [(getattr(word, TEXT) or "_").casefold() for word in sent.words],
+            max_n,
+        )
+    }
+    features.update(
+        ("UPOS", gram)
+        for gram in _ngrams(
+            [getattr(word, UPOS) or "_" for word in sent.words],
+            max_n,
+        )
+    )
     return features
 
 
-def _token(word) -> dict[str, str]:
+def _sentence_to_json(score: float, sent: Sentence) -> dict:
     return {
-        "ID": str(word.id),
-        "FORM": word.text or "_",
-        "LEMMA": word.lemma or "_",
-        "UPOS": word.upos or "_",
-        "XPOS": word.xpos or "_",
-        "FEATS": word.feats or "_",
-        "HEAD": str(word.head),
-        "DEPREL": word.deprel or "_",
+        "score": round(score, 4),
+        "sent_id": getattr(sent, "sent_id", ""),
+        "text": getattr(sent, "text", None)
+        or " ".join(getattr(word, TEXT) or "_" for word in sent.words),
+        "tokens": sent.to_dict(),
     }
 
 
-def _index_sentence(sent: Sentence, max_n: int) -> IndexedSentence:
-    tokens = [_token(word) for word in sent.words]
-    forms = [token["FORM"] for token in tokens]
-    upos = [token["UPOS"] for token in tokens]
-    return IndexedSentence(
-        sent_id=getattr(sent, "sent_id", ""),
-        text=getattr(sent, "text", None) or " ".join(forms),
-        forms=forms,
-        upos=upos,
-        tokens=tokens,
-        features=_features(forms, upos, max_n),
-    )
-
-
-def _index_doc(doc: Document, max_n: int) -> list[IndexedSentence]:
-    return [_index_sentence(sent, max_n) for sent in doc.sentences]
 
 
 class KNNRetrievalTool:
@@ -113,15 +94,15 @@ class KNNRetrievalTool:
         },
     }
 
-    def __init__(self, indexes: dict[str, list[IndexedSentence]], max_n: int = 3):
-        self.indexes = indexes
+    def __init__(self, documents: dict[str, Document], max_n: int = 3):
+        self.documents = documents
         self.max_n = max_n
 
     @classmethod
     def from_conllu_files(cls, train_files: dict[str, str | Path], max_n: int = 3):
         return cls(
             {
-                language: _index_doc(CoNLL.conll2doc(input_file=str(path)), max_n)
+                language: CoNLL.conll2doc(input_file=str(path))
                 for language, path in train_files.items()
             },
             max_n=max_n,
@@ -129,39 +110,37 @@ class KNNRetrievalTool:
 
     @classmethod
     def from_documents(cls, documents: dict[str, Document], max_n: int = 3):
-        return cls(
-            {language: _index_doc(doc, max_n) for language, doc in documents.items()},
-            max_n=max_n,
-        )
+        return cls(documents, max_n=max_n)
 
-    def retrieve(self, language: str, forms: list[str], upos: list[str] | None = None, k: int = 3):
-        if language not in self.indexes:
+    def retrieve(self, language: str, sent: Sentence, k: int = 3):
+        if language not in self.documents:
             raise ValueError(f"Unknown language: {language}")
-        if upos and len(upos) != len(forms):
-            raise ValueError("upos must have the same length as forms")
 
-        query = _features(forms, upos, self.max_n)
+        query = _features(sent, self.max_n)
         scored = []
-        for sentence in self.indexes[language]:
-            union = query | sentence.features
-            score = len(query & sentence.features) / len(union) if union else 0.0
+        for sentence in self.documents[language].sentences:
+            sentence_features = _features(sentence, self.max_n)
+            union = query | sentence_features
+            score = len(query & sentence_features) / len(union) if union else 0.0
             scored.append((score, sentence))
 
-        results = []
-        for score, sentence in sorted(scored, key=lambda item: item[0], reverse=True)[:k]:
-            results.append(
-                {
-                    "score": round(score, 4),
-                    "sent_id": sentence.sent_id,
-                    "text": sentence.text,
-                    "tokens": sentence.tokens,
-                }
-            )
-        return results
+        return sorted(scored, key=lambda item: item[0], reverse=True)[:k]
 
     def search(self, language: str, forms: list[str], upos: list[str] | None = None, k: int = 3) -> str:
         try:
-            return json.dumps(self.retrieve(language, forms, upos, k), ensure_ascii=False)
+            if upos and len(upos) != len(forms):
+                raise ValueError("upos must have the same length as forms")
+            sent = Sentence(
+                [
+                    {ID: i + 1, TEXT: form, UPOS: upos[i] if upos else "_"}
+                    for i, form in enumerate(forms)
+                ]
+            )
+            results = [
+                _sentence_to_json(score, sentence)
+                for score, sentence in self.retrieve(language, sent, k)
+            ]
+            return json.dumps(results, ensure_ascii=False)
         except ValueError as exc:
             return json.dumps({"error": str(exc)}, ensure_ascii=False)
 
