@@ -9,7 +9,7 @@ from agentic_nlp_pipeline.validation.tree_validation import (
     _is_acyclic,
     _has_valid_heads,
 )
-from agentic_nlp_pipeline.prompting.tools import KNNRetrievalTool
+from agentic_nlp_pipeline.tools import KNNRetrievalTool
 
 
 # ====================================================================
