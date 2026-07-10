@@ -1,4 +1,7 @@
+from datetime import datetime
 import json
+from pathlib import Path
+from typing import Callable
 
 import regex as re
 from stanza.models.common.doc import Sentence
@@ -6,6 +9,7 @@ from stanza.models.common.doc import Sentence
 from agentic_nlp_pipeline import LanguageModel
 
 
+# Some of this code is losely based on the exercise to Lecture 07.
 class DepParseAgent:
     TOOLS = []
     TOOL_REGISTRY = {}
@@ -22,101 +26,182 @@ class DepParseAgent:
         self.max_new_tokens = max_new_tokens
         self.max_iters_per_call = max_iters_per_call
 
-    @staticmethod
-    def _sent_to_dict(sent: Sentence) -> dict[int, str]:
-        """Convert a CoNLL-U Sentence into a {id: text} dict.
+    def register_tool(self, tool_schema: dict, method: Callable):
+        """Register an agent tool.
 
         Args:
-            sent: Some Stanza Sentence.
+            tool: The tool's defining schema.
+            method: The function associated to the tool.
+        """
+        self.TOOLS.append(tool_schema)
+        self.TOOL_REGISTRY[tool_schema["function"]["name"]] = method
+
+    def run(self, sent: Sentence) -> Sentence:
+        """Parse the dependencies of a sentence.
+
+        Args:
+            sent: The sentence to be parsed.
 
         Returns:
-            A dictionary of the form {id: text}, where `id` is
-            the word ID and `text` is the words FORM.
+            A new sentence with HEAD attributes set by the agent.
         """
-        return {word.id: word.text for word in sent.words}
+        sent_id = sent.sent_id
+        sent_text = sent.text
+        sent_words = [{"ID": w.id, "FORM": w.text} for w in sent.words]
+
+        content = f"Sentence: {sent_text}\nStructure:\n{str(sent_words)}"
+        messages = [
+            {"role": "system", "content": self.system_prompt},
+            {"role": "user", "content": content},
+        ]
+
+        for msg in messages:
+            self._print_msg(msg)
+
+        for _ in range(self.max_iters_per_call):
+            messages = self._run_iteration(messages)
+            if messages[-1]["role"] != "tool":
+                break
+            # TODO: Break only if output is satisfactory
+
+        self._log_run(messages)
+
+        # TODO: parse tree
+        tree = self._parse_dep_tree(messages[-1]["content"])
+        print(tree)
+        # TODO: Create new sentence with HEAD attributes set to model output
+        return sent
+
+    def _run_iteration(self, messages: list[dict[str, str]]) -> list[dict[str, str]]:
+        """Run one iteration of obtaining a model response and making
+        executing tool calls.
+
+        Args:
+            messages: The list of messages as context.
+
+        Returns:
+            A new list of messages, including both the new and old messages.
+        """
+        new_messages: list[dict[str, str]] = []
+
+        # Get response
+        tools = self.TOOLS if self.TOOLS else None
+        response = self.model.generate(
+            messages, tools=tools, max_new_tokens=self.max_new_tokens
+        )
+        new_messages.append({"role": "assistant", "content": response})
+        self._print_msg(new_messages[-1])
+
+        # Parse tool calls
+        tool_calls = self._parse_tool_calls(response)
+        if not tool_calls:
+            return [*messages, *new_messages]
+
+        # Execute tool calls
+        for tc in tool_calls:
+            # Get function name and arguments
+            fn_name = tc["name"]
+            fn_args = tc.get("arguments", {})
+            if isinstance(fn_args, str):
+                fn_args = json.loads(fn_args)
+
+            # Get tool result
+            result = (
+                self.TOOL_REGISTRY[fn_name](**fn_args)
+                if fn_name in self.TOOL_REGISTRY
+                else f"Unknown tool: '{fn_name}'"
+            )
+            new_messages.append(
+                {"role": "tool", "name": fn_name, "args": fn_args, "content": result}
+            )
+            self._print_msg(new_messages[-1])
+
+        return [*messages, *new_messages]
 
     @staticmethod
     def _parse_tool_calls(response: str) -> list[dict]:
-        pattern = r"<tool_call>\s*(.*?)\s*</tool_call>"  # parse the tool call by <tool_call> and </tool_call>
-        matches = re.findall(pattern, response, re.DOTALL)
+        """Parse tool calls from model responses.
+
+        Different models format their tool calls. This method is
+        capable to parse both JSON-formatted and pseudo-XML-formatted
+        tool calls.
+
+        Args:
+            response: The model response to be scanned for tool calls.
+
+        Returns:
+            A list of tool calls. Each tool call is a dictionary with
+            a `name` and an `arguments` entry.
+        """
+        TOOL_CALL_PATTERN = re.compile(r"<tool_call>\s*(.*?)\s*</tool_call>", re.DOTALL)
+        FUNCTION_NAME_PATTERN = re.compile(r"<function=(.*?)>")
+        FUNCTION_BODY_PATTERN = re.compile(r"<function=.*?>.</function>", re.DOTALL)
+        FUNCTION_ARGS_PATTERN = re.compile(
+            r"<parameter=(.*?)>(.*?)</parameter>", re.DOTALL
+        )
+
+        tool_call_matches = re.findall(TOOL_CALL_PATTERN, response)
         tool_calls = []
-        for raw in matches:
-            # parse JSON
+        for raw_tc in tool_call_matches:
+            # Parse JSON
             try:
-                tool_calls.append(json.loads(raw))
+                tool_calls.append(json.loads(raw_tc))
                 continue
             except json.JSONDecodeError:
                 pass
-            # parse XML
+
+            # Parse fake XML
             try:
-                name = re.findall(r"<function=(.*?)>", raw)[0]
-                body = re.findall(r"<function=.*?>.</function>", raw, re.DOTALL)[0]
-                arguments = re.findall(
-                    r"<parameter=(.*?)>(.*?)</parameter>", body, re.DOTALL
-                )
+                name = re.findall(FUNCTION_NAME_PATTERN, raw_tc)[0]
+                body = re.findall(FUNCTION_BODY_PATTERN, raw_tc)[0]
+                args = re.findall(FUNCTION_ARGS_PATTERN, body)
                 tool_call = {
                     "name": name.strip(),
                     "arguments": {
-                        arg_name.strip(): arg.strip() for arg_name, arg in arguments
+                        arg_name.strip(): arg.strip() for arg_name, arg in args
                     },
                 }
                 tool_calls.append(tool_call)
                 continue
             except IndexError:
                 pass
-            print(f"⚠️ UNPARSABLE TOOL CALL: {raw}")
+
+            # If the above attempts failed, the tool call is unparsable
+            print(f"⚠️ UNPARSABLE TOOL CALL: {raw_tc}")
         return tool_calls
 
-    def register_tool(self, tool, method):
-        self.TOOLS.append(tool)
-        self.TOOL_REGISTRY[tool["function"]["name"]] = method
+    @staticmethod
+    def _parse_dep_tree(response: str) -> dict[int, int]:
+        EDGE_PATTERN = re.compile(r"(\d+), ?(\d+)")
+        edge_matches = re.findall(EDGE_PATTERN, response)
+        return {s_node: e_node for s_node, e_node in edge_matches}
 
-    # Code inspired by the exercise from Lecture 07
-    def run(self, sent: Sentence):
-        content = str(self._sent_to_dict(sent))
+    @staticmethod
+    def _print_msg(msg: dict):
+        """Pretty-print a message.
 
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "user", "content": content},
-        ]
+        Args:
+            msg: A message in form of a dictionary.
+        """
+        role_emojis = {"system": "💻", "user": "👤", "assistant": "🤖", "tool": "🔨"}
+        role = msg["role"]
+        name = msg.get("name", "")
+        args = msg.get("args", "")
+        content = msg["content"]
+        print(
+            f"\n{'=' * 60}"
+            f"\n{role_emojis[role]}  {role} {name} {args}"
+            f"\n{'—' * 60}"
+            f"\n{content}"
+        )
 
-        print(f"{'=' * 60}")
-        print(f"  System: {self.system_prompt}")
-        print(f"  User: {content}")
-        print(f"{'=' * 60}")
-
-        for _ in range(self.max_iters_per_call):
-            tools = self.TOOLS if len(self.TOOLS) > 0 else None
-            response = self.model.generate(
-                messages, tools=tools, max_new_tokens=self.max_new_tokens
-            )
-            print(f"\n🤖  Response: {response}")
-
-            tool_calls = self._parse_tool_calls(response)
-            if not tool_calls:
-                answer = re.sub(r"<[^>]+>", "", response).strip()
-                print(f"\n🤖  Answer: {answer}")
-                return answer
-
-            messages.append({"role": "assistant", "content": response})
-
-            for tc in tool_calls:
-                fn_name = tc.get("name")
-                fn_args = tc.get("arguments", {})
-                assert isinstance(fn_name, str)
-                if isinstance(fn_args, str):
-                    fn_args = json.loads(fn_args)
-
-                print(f"\n🔨  Tool call  : {fn_name}({fn_args})")
-
-                result = (
-                    self.TOOL_REGISTRY[fn_name](**fn_args)
-                    if fn_name in self.TOOL_REGISTRY
-                    else f"Unknown tool: '{fn_name}'"
-                )
-                print(f"  Tool result: {result}")
-
-                messages.append({"role": "tool", "name": fn_name, "content": result})
+    @staticmethod
+    def _log_run(messages: list[dict]):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        log_dir = Path(__file__).resolve().parent / "agent_logs"
+        log_path = log_dir / f"run_{timestamp}.json"
+        with open(log_path, "w") as f:
+            json.dump(messages, f, indent=4)
 
 
 # Just for testing purposes
@@ -128,14 +213,10 @@ if __name__ == "__main__":
     from agentic_nlp_pipeline import LocalModel
     from agentic_nlp_pipeline.prompting.templates import DIRECT_PARSING_SYSTEM_PROMPT
 
-    # The different models seem to format tool calls differently (json vs. xml style).
-    # Currently, only Qwen2.5 is handled properly.
-    # TODO: make _parse_tool_calls more robust.
-
     MODEL_ID = "Qwen/Qwen3.5-2B"
     # MODEL_ID = "Qwen/Qwen3-0.6B"
     # MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"  # JSON-formatted tool calls
-    model = LocalModel(MODEL_ID)
+    model = LocalModel(MODEL_ID, device="xpu")
 
     agent = DepParseAgent(
         model,
@@ -177,6 +258,9 @@ if __name__ == "__main__":
             {"id": 5, "text": "."},
         ]
     )
+    sent1.text = " ".join([w.text for w in sent1.words])
+    sent1.sent_id = "test-sentence-1"
+    print(sent1.text)
 
     parsed_sent = agent.run(sent=sent1)
     """output:
