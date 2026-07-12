@@ -1,4 +1,3 @@
-from typing import Optional
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -11,7 +10,9 @@ class LocalModel:
         model: A pre-trained language model loaded from huggingface.
     """
 
-    def __init__(self, model_id: str, device: str = "auto"):
+    def __init__(
+        self, model_id: str, device: str = "auto", enable_thinking: bool = False
+    ):
         """Load model and tokenizer.
 
         Args:
@@ -19,19 +20,32 @@ class LocalModel:
             device: The device where the model is supposed to be loaded onto.
         """
         print(f"Loading model `{model_id}`")
+        self.enable_thinking = enable_thinking
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id,
             device_map=device,
         )
         self.model.eval()
+
+        im_end_id = self.tokenizer.convert_tokens_to_ids("<|im_end|>")
+        existing = self.model.generation_config.eos_token_id
+        if isinstance(existing, int):
+            existing = [existing]
+        elif existing is None:
+            existing = []
+        if im_end_id not in existing:
+            existing.append(im_end_id)
+        self.model.generation_config.eos_token_id = existing
+
+        print(self.tokenizer.decode([self.model.generation_config.eos_token_id]))
         print(f"Loaded model onto `{next(self.model.parameters()).device}`")
 
     def generate(
         self,
         messages: list[dict[str, str]],
         max_new_tokens: int = 200,
-        tools: Optional[list[dict]] = None,
+        tools: list[dict] | None = None,
     ) -> str:
         """Generate a model response.
 
@@ -43,19 +57,34 @@ class LocalModel:
             The model response as a string.
         """
         text = self.tokenizer.apply_chat_template(
-            messages, tools=tools, add_generation_prompt=True, tokenize=False
+            messages,
+            tools=tools,
+            add_generation_prompt=True,
+            tokenize=False,
+            enable_thinking=self.enable_thinking,
         )
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
         prompt_len = inputs["input_ids"].shape[1]
+
+        # Settings for thinking enabled as recommended for Qwen
+        do_sample = self.enable_thinking
+        temperature = 1.0 if self.enable_thinking else None
+        top_p = 0.95 if self.enable_thinking else None
+        top_k = 20 if self.enable_thinking else None
+        repetition_penalty = 1.1 if self.enable_thinking else None
+
         with torch.inference_mode():
             out = self.model.generate(  # type: ignore
                 **inputs,
                 max_new_tokens=max_new_tokens,
-                do_sample=False,
-                temperature=None,
-                top_p=None,
+                do_sample=do_sample,
+                temperature=temperature,
+                top_p=top_p,
+                top_k=top_k,
+                repetition_penalty=repetition_penalty,
                 pad_token_id=self.tokenizer.eos_token_id,
             )
+
         out_text = self.tokenizer.decode(
             out[0][prompt_len:],
             skip_special_tokens=True,
@@ -65,8 +94,6 @@ class LocalModel:
 
 # Little test
 if __name__ == "__main__":
-    print("=" * 64)
-
     MODEL_ID = "Qwen/Qwen3-0.6B"
     SYSTEM_PROMPT = "You are a precise, concise linguistics expert."
 
