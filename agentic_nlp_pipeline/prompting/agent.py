@@ -45,9 +45,8 @@ class DepParseAgent:
         Returns:
             A new sentence with HEAD attributes set by the agent.
         """
-        sent_id = sent.sent_id
         sent_text = sent.text
-        sent_words = [{"ID": w.id, "FORM": w.text} for w in sent.words]
+        sent_words = [{"id": w.id, "form": w.text} for w in sent.words]
 
         content = f"Sentence: {sent_text}\nStructure:\n{str(sent_words)}"
         messages = [
@@ -68,7 +67,8 @@ class DepParseAgent:
 
         # TODO: parse tree
         tree = self._parse_dep_tree(messages[-1]["content"])
-        print(tree)
+        for word, edge in zip(sent.words, tree):
+            word.head = edge["head"]
         # TODO: Create new sentence with HEAD attributes set to model output
         return sent
 
@@ -171,10 +171,11 @@ class DepParseAgent:
         return tool_calls
 
     @staticmethod
-    def _parse_dep_tree(response: str) -> dict[int, int]:
-        EDGE_PATTERN = re.compile(r"(\d+), ?(\d+)")
-        edge_matches = re.findall(EDGE_PATTERN, response)
-        return {s_node: e_node for s_node, e_node in edge_matches}
+    def _parse_dep_tree(response: str) -> list[dict]:
+        try:
+            return json.loads(response)
+        except json.JSONDecodeError:
+            return []
 
     @staticmethod
     def _print_msg(msg: dict):
@@ -215,14 +216,15 @@ if __name__ == "__main__":
 
     MODEL_ID = "Qwen/Qwen3.5-2B"
     # MODEL_ID = "Qwen/Qwen3-0.6B"
+    # MODEL_ID = "Qwen/Qwen3-2B"
     # MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"  # JSON-formatted tool calls
     model = LocalModel(MODEL_ID, device="xpu")
 
     agent = DepParseAgent(
         model,
         DIRECT_PARSING_SYSTEM_PROMPT
-        + "\nYou should always start with a tool call!",  # (Wrap your tool calls into <tool_call></tool_call> tags!)",
-        max_new_tokens=500,
+        + "\n\nUse should make at least one tool call!",  # (Wrap your tool calls into <tool_call></tool_call> tags!)",
+        max_new_tokens=10000,
         max_iters_per_call=5,
     )
 
@@ -260,47 +262,6 @@ if __name__ == "__main__":
     )
     sent1.text = " ".join([w.text for w in sent1.words])
     sent1.sent_id = "test-sentence-1"
-    print(sent1.text)
 
-    parsed_sent = agent.run(sent=sent1)
-    """output:
-    System: You are a precise annotator assistent. Your purpose is to assist a corpus linguist in the creation of dependency trees.
-
-    A dependency tree is a directed graph over a set of nodes (words) subject to the following conditions:
-    1. It has a single node with no incoming edges. This is the root node. In the output, the root's head entry is written as 0, since it has no head of its own.
-    2. Every other node has exactly one edge coming from its head.
-    3. It is acyclic, so when following along the edges you never end up at the same node again.
-    4. Each edge points from a dependency to its head, encoding the asymetric relation between the two.
-    In linguistic terms, a head is the word that determines the grammatical and semantic core of a phrase or construction — it dictates the category of the whole unit, governs agreement,
-    and is the element the rest of the phrase serves to modify, complete, or specify. For example, in 'the old book,' book is the head: it's what the phrase is fundamentally about, and 
-    old and the merely add information about it. In 'she sleeps,' the verb sleeps is the head of the clause, since it determines the clause's core predication and licenses the subject.
-
-    A dependency is the grammatical relation holding between a head and the word that depends on it — the dependent. The dependent is licensed, selected, or modified by its head: an adje
-    ctive depends on the noun it describes, a subject depends on the verb it complements, a determiner depends on the noun it specifies. The dependency relation captures how the dependen
-    t relates to its head — whether it's a modifier, an argument, a complement, and so on.
-
-    For a given tokenized sentence, your task is to parse a dependency tree as described above. Sentence will be given to you in the form of a dictonary {<node_id>: '<word>'}. Your answe
-    r MUST be given in the following format:
-    - One line for every word in the input
-    - One tuple in every line
-    - The first entry must be the node id of the dependecy
-    - The second entry must be the node id of the head
-    A few practical hints:
-    - No node is its own head.
-    - Only one word (the root) can have 0 as its head.
-    - By convention, sentence final punctuation attaches to the root.
-
-    You should always start with a tool call!
-    User: {1: 'My', 2: 'name', 3: 'is', 4: 'C3PO', 5: '.'}
-    ============================================================
-
-    🤖  Response: <tool_call>
-    {"name": "tree_parser", "arguments": {"sentence": "My name is C3PO."}}
-    </tool_call>
-
-    🔨  Tool call  : tree_parser({'sentence': 'My name is C3PO.'})
-    Tool result: Unable to parse sentence completely, but the C3PO is definitly the root of the sentence and should be connected to `0`.
-
-    🤖  Response: The sentence "My name is C3PO." cannot be parsed completely due to missing words. However, based on the structure you've provided, C3PO is definitively the root of the 
-    sentence and should be connected to the root node (0).
-    """
+    agent.run(sent=sent1)
+    print(sent1)
