@@ -11,7 +11,7 @@ from agentic_nlp_pipeline.validation.tree_validation import (
     _is_acyclic,
     _has_valid_heads,
 )
-from agentic_nlp_pipeline.tools.base import sentence_to_token_dicts
+from agentic_nlp_pipeline.tools.utils import sentence_to_token_dicts
 from agentic_nlp_pipeline.tools import KNNRetrievalTool
 
 
@@ -200,7 +200,7 @@ def test_sentence_to_token_dicts():
 
 
 # ====================================================================
-#  tools.py
+#  retrieval.py
 # ====================================================================
 
 
