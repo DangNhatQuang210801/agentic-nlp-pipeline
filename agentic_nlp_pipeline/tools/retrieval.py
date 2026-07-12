@@ -5,7 +5,7 @@ from pathlib import Path
 from stanza.models.common.doc import Document, Sentence, TEXT, UPOS
 from stanza.utils.conll import CoNLL
 
-from agentic_nlp_pipeline.tools.base import (
+from .utils import (
     sentence_to_token_dicts,
     token_dicts_to_sentence,
     tool_error,
