@@ -65,11 +65,9 @@ class DepParseAgent:
 
         self._log_run(messages)
 
-        # TODO: parse tree
         tree = self._parse_dep_tree(messages[-1]["content"])
         for word, edge in zip(sent.words, tree):
             word.head = edge["head"]
-        # TODO: Create new sentence with HEAD attributes set to model output
         return sent
 
     def _run_iteration(self, messages: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -82,6 +80,9 @@ class DepParseAgent:
         Returns:
             A new list of messages, including both the new and old messages.
         """
+        print(f"\n{'=' * 70}")
+        print("🤖  assistant")
+        print(f"{'-' * 70}")
         new_messages: list[dict[str, str]] = []
 
         # Get response
@@ -90,7 +91,6 @@ class DepParseAgent:
             messages, tools=tools, max_new_tokens=self.max_new_tokens
         )
         new_messages.append({"role": "assistant", "content": response})
-        self._print_msg(new_messages[-1])
 
         # Parse tool calls
         tool_calls = self._parse_tool_calls(response)
@@ -105,6 +105,10 @@ class DepParseAgent:
             if isinstance(fn_args, str):
                 fn_args = json.loads(fn_args)
 
+            print(f"\n{'=' * 70}")
+            print(f"🔨  tool {fn_name} {fn_args}")
+            print(f"{'-' * 70}")
+
             # Get tool result
             result = (
                 self.TOOL_REGISTRY[fn_name](**fn_args)
@@ -114,7 +118,7 @@ class DepParseAgent:
             new_messages.append(
                 {"role": "tool", "name": fn_name, "args": fn_args, "content": result}
             )
-            self._print_msg(new_messages[-1])
+            print(f"{result}")
 
         return [*messages, *new_messages]
 
@@ -175,6 +179,13 @@ class DepParseAgent:
         try:
             return json.loads(response)
         except json.JSONDecodeError:
+            pass
+        try:
+            tree = re.findall(r"(\[{.+?}\])", response)[-1]
+            return json.loads(tree)
+        except json.JSONDecodeError:
+            return []
+        except IndexError:
             return []
 
     @staticmethod
@@ -186,15 +197,10 @@ class DepParseAgent:
         """
         role_emojis = {"system": "💻", "user": "👤", "assistant": "🤖", "tool": "🔨"}
         role = msg["role"]
-        name = msg.get("name", "")
-        args = msg.get("args", "")
         content = msg["content"]
-        print(
-            f"\n{'=' * 60}"
-            f"\n{role_emojis[role]}  {role} {name} {args}"
-            f"\n{'—' * 60}"
-            f"\n{content}"
-        )
+        print(f"\n{'=' * 70}")
+        print(f"{role_emojis[role]}  {role}")
+        print(f"{'-' * 70}\n{content}")
 
     @staticmethod
     def _log_run(messages: list[dict]):
@@ -211,14 +217,18 @@ def tree_parser(sentence: str):
 
 
 if __name__ == "__main__":
-    from agentic_nlp_pipeline import LocalModel
-    from agentic_nlp_pipeline.prompting.templates import DIRECT_PARSING_SYSTEM_PROMPT
+    # from agentic_nlp_pipeline import LocalModel
 
-    MODEL_ID = "Qwen/Qwen3.5-2B"
+    # MODEL_ID = "Qwen/Qwen3.5-2B"
     # MODEL_ID = "Qwen/Qwen3-0.6B"
     # MODEL_ID = "Qwen/Qwen3-2B"
     # MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"  # JSON-formatted tool calls
-    model = LocalModel(MODEL_ID, device="xpu")
+    # model = LocalModel(MODEL_ID, device="xpu", enable_thinking=False)
+
+    from agentic_nlp_pipeline.prompting.templates import DIRECT_PARSING_SYSTEM_PROMPT
+    from agentic_nlp_pipeline import LlamaCppModel
+
+    model = LlamaCppModel()
 
     agent = DepParseAgent(
         model,
