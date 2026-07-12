@@ -7,9 +7,10 @@ import regex as re
 from stanza.models.common.doc import Sentence
 
 from agentic_nlp_pipeline import LanguageModel
+from agentic_nlp_pipeline.tools.base import sentence_to_token_dicts, tool_json
 
 
-# Some of this code is losely based on the exercise to Lecture 07.
+# Some of this code is loosely based on the exercise to Lecture 07.
 class DepParseAgent:
     TOOLS = []
     TOOL_REGISTRY = {}
@@ -45,10 +46,7 @@ class DepParseAgent:
         Returns:
             A new sentence with HEAD attributes set by the agent.
         """
-        sent_text = sent.text
-        sent_words = [{"id": w.id, "form": w.text} for w in sent.words]
-
-        content = f"Sentence: {sent_text}\nStructure:\n{str(sent_words)}"
+        content = tool_json(sentence_to_token_dicts(sent, fields=("id", "form")))
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": content},
@@ -167,7 +165,7 @@ class DepParseAgent:
                 pass
 
             # If the above attempts failed, the tool call is unparsable
-            print(f"⚠️ UNPARSABLE TOOL CALL: {raw_tc}")
+            print(f"UNPARSABLE TOOL CALL: {raw_tc}")
         return tool_calls
 
     @staticmethod
@@ -184,15 +182,14 @@ class DepParseAgent:
         Args:
             msg: A message in form of a dictionary.
         """
-        role_emojis = {"system": "💻", "user": "👤", "assistant": "🤖", "tool": "🔨"}
         role = msg["role"]
         name = msg.get("name", "")
         args = msg.get("args", "")
         content = msg["content"]
         print(
             f"\n{'=' * 60}"
-            f"\n{role_emojis[role]}  {role} {name} {args}"
-            f"\n{'—' * 60}"
+            f"\n{role} {name} {args}"
+            f"\n{'-' * 60}"
             f"\n{content}"
         )
 
@@ -200,9 +197,10 @@ class DepParseAgent:
     def _log_run(messages: list[dict]):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         log_dir = Path(__file__).resolve().parent / "agent_logs"
+        log_dir.mkdir(exist_ok=True)
         log_path = log_dir / f"run_{timestamp}.json"
-        with open(log_path, "w") as f:
-            json.dump(messages, f, indent=4)
+        with open(log_path, "w", encoding="utf-8") as f:
+            json.dump(messages, f, indent=4, ensure_ascii=False)
 
 
 # Just for testing purposes
