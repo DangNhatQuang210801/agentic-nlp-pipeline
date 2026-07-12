@@ -1,5 +1,7 @@
 """Tests for smaller utility functions."""
 
+import json
+
 from stanza.models.common.doc import Document, ID, Sentence, TEXT, UPOS
 
 from agentic_nlp_pipeline.prompting.agent import DepParseAgent
@@ -9,6 +11,7 @@ from agentic_nlp_pipeline.validation.tree_validation import (
     _is_acyclic,
     _has_valid_heads,
 )
+from agentic_nlp_pipeline.tools.base import sentence_to_token_dicts
 from agentic_nlp_pipeline.tools import KNNRetrievalTool
 
 
@@ -188,6 +191,14 @@ My name is C3PO.
     assert DepParseAgent._parse_tool_calls(xml_tool_call) == expected
 
 
+def test_sentence_to_token_dicts():
+    sent = Sentence([{ID: 1, TEXT: "Dogs", UPOS: "NOUN"}])
+
+    assert sentence_to_token_dicts(sent, fields=("id", "form", "upos")) == [
+        {"id": 1, "form": "Dogs", "upos": "NOUN"}
+    ]
+
+
 # ====================================================================
 #  tools.py
 # ====================================================================
@@ -222,3 +233,15 @@ def test_knn_retrieval_tool(tmp_path):
 
     assert results[0][1].sent_id == "s1"
     assert results[0][1].words[1].deprel == "root"
+
+    tool_result = json.loads(
+        tool.search(
+            "english",
+            [
+                {"id": 1, "form": "I", "upos": "PRON"},
+                {"id": 2, "form": "like", "upos": "VERB"},
+            ],
+            k=1,
+        )
+    )
+    assert tool_result[0]["sent_id"] == "s1"

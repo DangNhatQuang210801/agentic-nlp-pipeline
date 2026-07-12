@@ -1,10 +1,16 @@
 """Retrieval tools for prompting agents."""
 
-import json
 from pathlib import Path
 
-from stanza.models.common.doc import Document, ID, Sentence, TEXT, UPOS
+from stanza.models.common.doc import Document, Sentence, TEXT, UPOS
 from stanza.utils.conll import CoNLL
+
+from agentic_nlp_pipeline.tools.base import (
+    sentence_to_token_dicts,
+    token_dicts_to_sentence,
+    tool_error,
+    tool_json,
+)
 
 
 def _ngrams(items: list[str], max_n: int) -> set[tuple[str, ...]]:
@@ -38,7 +44,10 @@ def _sentence_to_json(score: float, sent: Sentence) -> dict:
         "sent_id": getattr(sent, "sent_id", ""),
         "text": getattr(sent, "text", None)
         or " ".join(getattr(word, TEXT) or "_" for word in sent.words),
-        "tokens": sent.to_dict(),
+        "tokens": sentence_to_token_dicts(
+            sent,
+            fields=("id", "form", "lemma", "upos", "xpos", "feats", "head", "deprel"),
+        ),
     }
 
 
@@ -60,22 +69,25 @@ class KNNRetrievalTool:
                         "type": "string",
                         "description": "Language key, e.g. vietnamese.",
                     },
-                    "forms": {
+                    "tokens": {
                         "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Token FORM values in sentence order.",
-                    },
-                    "upos": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Optional UPOS tags in sentence order.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "integer"},
+                                "form": {"type": "string"},
+                                "upos": {"type": "string"},
+                            },
+                            "required": ["id", "form"],
+                        },
+                        "description": "Input sentence as a JSON-style list of token dictionaries.",
                     },
                     "k": {
                         "type": "integer",
                         "description": "Number of examples to return.",
                     },
                 },
-                "required": ["language", "forms"],
+                "required": ["language", "tokens"],
             },
         },
     }
@@ -115,26 +127,18 @@ class KNNRetrievalTool:
     def search(
         self,
         language: str,
-        forms: list[str],
-        upos: list[str] | None = None,
+        tokens: list[dict],
         k: int = 3,
     ) -> str:
         try:
-            if upos and len(upos) != len(forms):
-                raise ValueError("upos must have the same length as forms")
-            sent = Sentence(
-                [
-                    {ID: i + 1, TEXT: form, UPOS: upos[i] if upos else "_"}
-                    for i, form in enumerate(forms)
-                ]
-            )
+            sent = token_dicts_to_sentence(tokens)
             results = [
                 _sentence_to_json(score, sentence)
                 for score, sentence in self.retrieve(language, sent, k)
             ]
-            return json.dumps(results, ensure_ascii=False)
+            return tool_json(results)
         except ValueError as exc:
-            return json.dumps({"error": str(exc)}, ensure_ascii=False)
+            return tool_error(str(exc))
 
     def as_agent_tool(self):
         return self.schema, self.search
