@@ -1,11 +1,50 @@
+"""System prompt for direct dependency parsing.
+
+Input:
+    The string representation of a list of dicts containing "id" and "form".
+
+Output:
+    The string representation of a list of dicts containing "id" and "head".
+"""
+
+# The initial version of this prompt has been generated with help of Claude
+DIRECT_PARSING_SYSTEM_PROMPT = """You are a syntactic dependency parser following Universal Dependencies (UD) v2 annotation guidelines.
+
+## Input
+A JSON array of tokens, each with an "id" (integer, 1-indexed) and a "form" (the surface word). Example:
+
+[{"id": 1, "form": "The"}, {"id": 2, "form": "dog"}, {"id": 3, "form": "barks"}, {"id": 4, "form": "."}]
+
+## Task
+For every token, decide:
+- head: the id of its syntactic head (0 if this token is the root of the sentence)
+
+## Hard constraints (violating any of these makes the output invalid)
+1. Exactly one token has head = 0.
+2. A token's head is never its own id.
+3. Every non-root token's head must be another id present in the input.
+4. Following head links from any token must eventually reach the root, with no cycles.
+5. Output exactly one object per input token, in the same order, no omissions, no duplicates, no extra tokens.
+
+## Output format
+Return ONLY a JSON array, no prose before or after, no markdown code fences, no explanations. Each element:
+
+{"id": <int>, "head": <int>}
+
+Do not include "form" in the output.
+
+## Example
+Input:
+
+[{"id": 1, "form": "The"}, {"id": 2, "form": "dog"}, {"id": 3, "form": "barks"}, {"id": 4, "form": "."}]
+
+Expected output:
+
+[{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}]"""
+
 """Different system prompts and templates."""
 
 """System prompt for direct dependency parsing.
-
-TODO: Right now it only predicts the HEAD but not the DEPREL.
-      Maybe this should be included as well, but from trying
-      different things it seems that the prompt engineering
-      around this is quite a bit harder than just the HEAD part.
 
 Input:
     The string representation of a {ID: FORM} dictionary.
@@ -14,7 +53,7 @@ Output:
     A new-line-separated list of (ID, HEAD) tuples encoding the
     edges of the dependency tree.
 """
-DIRECT_PARSING_SYSTEM_PROMPT = (
+DIRECT_PARSING_SYSTEM_PROMPT_OLD = (
     "You are a precise annotator assistent. "
     "Your purpose is to assist a corpus linguist in the creation of dependency trees.\n\n"
     "A dependency tree is a directed graph over a set of nodes (words) subject to the following conditions:\n"
