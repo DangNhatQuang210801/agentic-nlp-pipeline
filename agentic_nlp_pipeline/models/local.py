@@ -1,5 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from threading import Thread
+from transformers import TextIteratorStreamer
 
 
 class LocalModel:
@@ -64,7 +66,9 @@ class LocalModel:
             enable_thinking=self.enable_thinking,
         )
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
-        prompt_len = inputs["input_ids"].shape[1]
+        streamer = TextIteratorStreamer(
+            self.tokenizer, skip_prompt=True, skip_special_tokens=True
+        )
 
         # Settings for thinking enabled as recommended for Qwen
         do_sample = self.enable_thinking
@@ -73,23 +77,29 @@ class LocalModel:
         top_k = 20 if self.enable_thinking else None
         repetition_penalty = 1.1 if self.enable_thinking else None
 
-        with torch.inference_mode():
-            out = self.model.generate(  # type: ignore
-                **inputs,
-                max_new_tokens=max_new_tokens,
-                do_sample=do_sample,
-                temperature=temperature,
-                top_p=top_p,
-                top_k=top_k,
-                repetition_penalty=repetition_penalty,
-                pad_token_id=self.tokenizer.eos_token_id,
-            )
-
-        out_text = self.tokenizer.decode(
-            out[0][prompt_len:],
-            skip_special_tokens=True,
+        # Putting together generation arguments
+        generation_kwargs = dict(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=do_sample,
+            temperature=temperature,
+            top_p=top_p,
+            top_k=top_k,
+            repetition_penalty=repetition_penalty,
+            pad_token_id=self.tokenizer.eos_token_id,
+            streamer=streamer,
         )
-        return out_text.strip()
+
+        thread = Thread(target=self.model.generate, kwargs=generation_kwargs)  # type: ignore
+        thread.start()
+
+        parts: list[str] = []
+        for token_text in streamer:
+            print(token_text, end="", flush=True)
+            parts.append(token_text)
+
+        thread.join()
+        return "".join(parts).strip()
 
 
 # Little test
