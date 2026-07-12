@@ -1,6 +1,6 @@
 # Vietnamese Baseline and Morphology Notes
 
-Task note: Vietnamese-specific preparation for `1.3a-VI` and `2.5-VI`. GenAI was used to help inspect the repository, run the checks, and draft this note.
+Task note: Vietnamese-specific preparation for `1.3a-VI` and `2.5-VI`.
 
 ## 1.3a-VI — Vietnamese Baseline Preparation
 

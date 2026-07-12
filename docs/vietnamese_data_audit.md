@@ -1,6 +1,6 @@
 # Vietnamese Data Audit
 
-Task note: Vietnamese subset audit for UD_Vietnamese-VTB. GenAI was used to help draft and structure this note; counts come from `scripts/inspect_vietnamese_vtb.py`.
+Task note: Vietnamese subset audit for UD_Vietnamese-VTB. Counts come from `scripts/inspect_vietnamese_vtb.py`.
 
 ## Source
 
