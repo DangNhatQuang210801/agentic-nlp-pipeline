@@ -9,17 +9,26 @@ class TreeValidationTool:
         "type": "function",
         "function": {
             "name": "validate_dependency_tree",
-            "description": ("Check if a dependency graph has a valid tree structure."),
+            "description": (
+                "Check whether the sentence's dependency tree adhears to a number of formal constraints. This is something to be checked befor submitting a final answer."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "edges": {
+                    "sent": {
                         "type": "array",
-                        "items": {"type": "string"},
-                        "description": "List of of edges. Expected type: list[tuple[int, int]].",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "integer"},
+                                "head": {"type": "integer"},
+                            },
+                            "required": ["id", "head"],
+                        },
+                        "description": "The dependency tree as an array of token objects.",
                     },
                 },
-                "required": ["edges"],
+                "required": ["sent"],
             },
         },
     }

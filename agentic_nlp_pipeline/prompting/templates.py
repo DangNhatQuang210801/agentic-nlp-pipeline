@@ -18,6 +18,7 @@ A JSON array of tokens, each with an "id" (integer, 1-indexed) and a "form" (the
 ## Task
 For every token, decide:
 - head: the id of its syntactic head (0 if this token is the root of the sentence)
+- Tools over thinking: Instead of producing long chains of thought you should make good use of the tools available.
 
 ## Hard constraints (violating any of these makes the output invalid)
 1. Exactly one token has head = 0.

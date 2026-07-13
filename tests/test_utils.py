@@ -187,8 +187,36 @@ My name is C3PO.
 </function>
 </tool_call>"""
     expected = [{"name": "tree_parser", "arguments": {"sentence": "My name is C3PO."}}]
+
+    json_tool_call2 = """<tool_call>
+    {"name": "validate_dependency_tree", "arguments": {"sent": [{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}, {"id": 5, "head": 3}]}}
+    </tool_call>"""
+    xml_tool_call2 = """<tool_call>
+<function=validate_dependency_tree>
+<parameter=sent>
+[{'id': 1, 'head': 2}, {'id': 2, 'head': 3}, {'id': 3, 'head': 0}, {'id': 4, 'head': 3}, {'id': 5, 'head': 3}]
+</parameter>
+</function>
+</tool_call>"""
+    expected2 = [
+        {
+            "name": "validate_dependency_tree",
+            "arguments": {
+                "sent": [
+                    {"id": 1, "head": 2},
+                    {"id": 2, "head": 3},
+                    {"id": 3, "head": 0},
+                    {"id": 4, "head": 3},
+                    {"id": 5, "head": 3},
+                ]
+            },
+        }
+    ]
+
     assert DepParseAgent._parse_tool_calls(json_tool_call) == expected
     assert DepParseAgent._parse_tool_calls(xml_tool_call) == expected
+    assert DepParseAgent._parse_tool_calls(json_tool_call2) == expected2
+    assert DepParseAgent._parse_tool_calls(xml_tool_call2) == expected2
 
 
 def test_sentence_to_token_dicts():

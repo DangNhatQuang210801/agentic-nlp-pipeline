@@ -1,3 +1,4 @@
+import ast
 from datetime import datetime
 import json
 from pathlib import Path
@@ -48,8 +49,9 @@ class DepParseAgent:
         """
         sent_text = sent.text
         sent_words = [{"id": w.id, "form": w.text} for w in sent.words]
+        sent_words_str = re.sub(r"'", '"', str(sent_words))
 
-        content = f"Sentence: {sent_text}\nStructure:\n{str(sent_words)}"
+        content = f"Sentence: {sent_text}\nStructure:\n{sent_words_str}"
         messages = [
             {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": content},
@@ -105,8 +107,6 @@ class DepParseAgent:
             # Get function name and arguments
             fn_name = tc["name"]
             fn_args = tc.get("arguments", {})
-            if isinstance(fn_args, str):
-                fn_args = json.loads(fn_args)
 
             print(f"\n{'=' * 70}")
             print(f"🔨  tool {fn_name} {fn_args}")
@@ -140,9 +140,24 @@ class DepParseAgent:
             A list of tool calls. Each tool call is a dictionary with
             a `name` and an `arguments` entry.
         """
+
+        def _parse_arg(value: Any):
+            # If value is not a string, return
+            if not isinstance(value, str):
+                return value
+            # Otherwise try to parse it one way or the other
+            try:
+                return json.loads(value)
+            except json.JSONDecodeError:
+                pass
+            try:
+                return ast.literal_eval(value)
+            except (ValueError, SyntaxError):
+                return value
+
         TOOL_CALL_PATTERN = re.compile(r"<tool_call>\s*(.*?)\s*</tool_call>", re.DOTALL)
         FUNCTION_NAME_PATTERN = re.compile(r"<function=(.*?)>")
-        FUNCTION_BODY_PATTERN = re.compile(r"<function=.*?>.</function>", re.DOTALL)
+        FUNCTION_BODY_PATTERN = re.compile(r"<function=.*?>(.*?)</function>", re.DOTALL)
         FUNCTION_ARGS_PATTERN = re.compile(
             r"<parameter=(.*?)>(.*?)</parameter>", re.DOTALL
         )
@@ -150,6 +165,7 @@ class DepParseAgent:
         tool_call_matches = re.findall(TOOL_CALL_PATTERN, response)
         tool_calls = []
         for raw_tc in tool_call_matches:
+            print(f"Tool call match: {raw_tc}")
             # Parse JSON
             try:
                 tool_calls.append(json.loads(raw_tc))
@@ -165,7 +181,8 @@ class DepParseAgent:
                 tool_call = {
                     "name": name.strip(),
                     "arguments": {
-                        arg_name.strip(): arg.strip() for arg_name, arg in args
+                        arg_name.strip(): _parse_arg(arg.strip())
+                        for arg_name, arg in args
                     },
                 }
                 tool_calls.append(tool_call)
@@ -175,6 +192,7 @@ class DepParseAgent:
 
             # If the above attempts failed, the tool call is unparsable
             print(f"⚠️ UNPARSABLE TOOL CALL: {raw_tc}")
+        print(f"All tool calls: {tool_calls}")
         return tool_calls
 
     @staticmethod
@@ -233,7 +251,7 @@ class DepParseAgent:
             messages: List of messages from system, user, assistant
                 and tools.
         """
-        print(len(messages))
+        self.stats = {}
         for msg in messages:
             role = msg["role"]
             role_dict = self.stats.setdefault(role, {})
