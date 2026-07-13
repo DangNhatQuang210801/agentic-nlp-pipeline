@@ -97,6 +97,7 @@ class LocalModel:
         for token_text in streamer:
             print(token_text, end="", flush=True)
             parts.append(token_text)
+        print()
 
         thread.join()
         return "".join(parts).strip()

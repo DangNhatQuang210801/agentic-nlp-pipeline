@@ -68,6 +68,7 @@ class LlamaCppModel:
                     entry["name"] += tc_delta.function.name
                 if tc_delta.function and tc_delta.function.arguments:
                     entry["arguments"] += tc_delta.function.arguments
+        print()
 
         # It would probably have been easier to work with the
         # outputs directly, but stitching them back together inot
