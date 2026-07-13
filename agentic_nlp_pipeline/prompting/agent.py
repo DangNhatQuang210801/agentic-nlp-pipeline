@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Any
 
 import regex as re
 from stanza.models.common.doc import Sentence
@@ -13,6 +13,7 @@ from agentic_nlp_pipeline import LanguageModel
 class DepParseAgent:
     TOOLS: list[dict] = []
     TOOL_REGISTRY: dict[str, Callable] = {}
+    stats: dict[str, dict[str, Any]] = {}
 
     def __init__(
         self,
@@ -59,11 +60,13 @@ class DepParseAgent:
 
         for _ in range(self.max_iters_per_call):
             messages = self._run_iteration(messages)
+            self._update_stats(messages)
             if messages[-1]["role"] != "tool":
                 break
             # TODO: Break only if output is satisfactory
 
         self._log_run(messages)
+        self._update_stats(messages)
 
         tree = self._parse_dep_tree(messages[-1]["content"])
         for word, edge in zip(sent.words, tree):
@@ -176,6 +179,15 @@ class DepParseAgent:
 
     @staticmethod
     def _parse_dep_tree(response: str) -> list[dict]:
+        """Parse the dependency tree from the model output.
+
+        Args:
+            response: The model response as str to parse the
+                dependency tree from.
+
+        Returns:
+            The dependency tree parsed as a list of dicts.
+        """
         try:
             return json.loads(response)
         except json.JSONDecodeError:
@@ -183,9 +195,7 @@ class DepParseAgent:
         try:
             tree = re.findall(r"(\[{.+?}\])", response)[-1]
             return json.loads(tree)
-        except json.JSONDecodeError:
-            return []
-        except IndexError:
+        except (json.JSONDecodeError, IndexError):
             return []
 
     @staticmethod
@@ -204,8 +214,31 @@ class DepParseAgent:
 
     @staticmethod
     def _log_run(messages: list[dict]):
+        """Save the list of messages as a json file.
+
+        Args:
+            messages: List of messages from system, user, assistant
+                and tools.
+        """
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         log_dir = Path(__file__).resolve().parent / "agent_logs"
         log_path = log_dir / f"run_{timestamp}.json"
         with open(log_path, "w") as f:
             json.dump(messages, f, indent=4)
+
+    def _update_stats(self, messages: list[dict[str, Any]]):
+        """Calculate stats about messages sent back and forth.
+
+        Args:
+            messages: List of messages from system, user, assistant
+                and tools.
+        """
+        print(len(messages))
+        for msg in messages:
+            role = msg["role"]
+            role_dict = self.stats.setdefault(role, {})
+            role_dict["n"] = role_dict.get("n", 0) + 1
+            if role == "tool":
+                name = msg["name"]
+                tools_dict = role_dict.setdefault("tools", {})
+                tools_dict[name] = tools_dict.get("n", 0) + 1
