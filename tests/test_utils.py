@@ -12,7 +12,7 @@ from agentic_nlp_pipeline.validation.tree_validation import (
     _has_valid_heads,
 )
 from agentic_nlp_pipeline.tools.utils import sentence_to_token_dicts
-from agentic_nlp_pipeline.tools import KNNRetrievalTool
+from agentic_nlp_pipeline.tools import KNNRetrievalTool, MorphologyLookupTool
 
 
 # ====================================================================
@@ -224,6 +224,34 @@ def test_sentence_to_token_dicts():
 
     assert sentence_to_token_dicts(sent, fields=("id", "form", "upos")) == [
         {"id": 1, "form": "Dogs", "upos": "NOUN"}
+    ]
+
+
+def test_morphology_lookup_tool(tmp_path):
+    train = tmp_path / "morphology.conllu"
+    train.write_text(
+        """1\tDogs\tdog\tNOUN\t_\tNumber=Plur\t0\troot\t_\t_
+2\tdogs\tdog\tNOUN\t_\tNumber=Plur\t1\tconj\t_\t_
+3\tDOGS\tdog\tPROPN\t_\tNumber=Plur\t1\tconj\t_\t_
+
+""",
+        encoding="utf-8",
+    )
+    tool = MorphologyLookupTool.from_conllu_files({"english": train})
+
+    result = json.loads(tool.lookup("english", [{"id": 1, "form": "DOGS"}]))
+
+    assert result == [
+        {
+            "id": 1,
+            "form": "DOGS",
+            "lemma_candidates": [{"value": "dog", "count": 3}],
+            "upos_candidates": [
+                {"value": "NOUN", "count": 2},
+                {"value": "PROPN", "count": 1},
+            ],
+            "feats_candidates": [{"value": "Number=Plur", "count": 3}],
+        }
     ]
 
 
