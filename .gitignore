@@ -22,7 +22,8 @@ Thumbs.db
 .idea/
 
 # Data and outputs
-data/**/raw/
+# data/**/raw/
+data/**/external/**/
 data/**/*.conllu
 data/**/*.conll
 data/**/*.zip
@@ -32,6 +33,7 @@ results/**/*.csv
 results/**/*.json
 results/**/*.jsonl
 results/**/*.tsv
+agentic_nlp_pipeline/prompting/**/*.json
 
 # Keep placeholder files
 !**/.gitkeep
