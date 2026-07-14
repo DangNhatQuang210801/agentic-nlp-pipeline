@@ -41,7 +41,16 @@ Input:
 
 Expected output:
 
-[{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}]"""
+[{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}]
+
+## Guidance
+- By convention, sentence-final punctuation attaches to the head of the phrase, which may or may not be the last word of the sentence.
+- Keep your reasoning brief — no more than 2-3 paragraphs.
+- State your analysis once and commit to it.
+- Do not restate the problem, do not re-derive the same conclusion twice, and do not second-guess an answer you've already reached.
+- Do not use phrases like "wait", "let me reconsider", "actually", or "hold on" — these indicate you are second-guessing yourself.
+- Trust your first well-reasoned analysis.
+- The final answer does not need to be perfect."""
 
 """System prompt for agentic dependency parsing.
 
@@ -87,4 +96,13 @@ Input:
 
 Expected output:
 
-[{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}]"""
+[{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}]
+
+## Guidance
+- By convention, sentence-final punctuation attaches to the head of the phrase, which may or may not be the last word of the sentence.
+- Keep your reasoning brief — no more than 2-3 paragraphs.
+- State your analysis once and commit to it.
+- Do not restate the problem, do not re-derive the same conclusion twice, and do not second-guess an answer you've already reached.
+- Do not use phrases like "wait", "let me reconsider", "actually", or "hold on" — these indicate you are second-guessing yourself.
+- Trust your first well-reasoned analysis.
+- The final answer does not need to be perfect."""
