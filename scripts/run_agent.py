@@ -6,7 +6,7 @@ from stanza.models.common.doc import Sentence
 
 from agentic_nlp_pipeline import DepParseAgent
 from agentic_nlp_pipeline import KNNRetrievalTool, TreeValidationTool
-from agentic_nlp_pipeline.prompting.templates import DIRECT_PARSING_SYSTEM_PROMPT
+from agentic_nlp_pipeline.agentic.templates import DIRECT_PARSING_SYSTEM_PROMPT
 from agentic_nlp_pipeline import LlamaCppModel
 
 

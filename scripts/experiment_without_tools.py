@@ -2,7 +2,7 @@ from pathlib import Path
 
 from agentic_nlp_pipeline import DepParseAgent, LlamaCppModel, Experiment
 from agentic_nlp_pipeline.experiment import PARSED_DIRECTLY
-from agentic_nlp_pipeline.prompting import templates
+from agentic_nlp_pipeline.agentic import templates
 
 
 def main():

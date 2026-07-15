@@ -5,8 +5,8 @@ from .validation.tree_validation import validate_sentence
 from .models import LanguageModel
 from .models import LocalModel
 from .models import LlamaCppModel
-from .prompting import templates
-from .prompting import DepParseAgent
+from .agentic import templates
+from .agentic import DepParseAgent
 from .tools import AgentTool
 from .tools import KNNRetrievalTool
 from .tools import TreeValidationTool

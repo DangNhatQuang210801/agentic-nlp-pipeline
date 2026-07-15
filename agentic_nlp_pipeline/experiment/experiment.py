@@ -3,7 +3,7 @@ from pathlib import Path
 from stanza.utils.conll import CoNLL
 
 from . import utils
-from ..prompting import DepParseAgent
+from ..agentic import DepParseAgent
 
 UNPARSED = "--original.conllu"
 PARSED_DIRECTLY = "--parsed-directly.conllu"

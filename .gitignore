@@ -24,7 +24,6 @@ Thumbs.db
 # Data and outputs
 # data/**/raw/
 data/**/external/**/
-# data/**/*.conllu
 data/**/*.conll
 data/**/*.zip
 data/**/*.tar
@@ -33,7 +32,7 @@ results/**/*.csv
 results/**/*.json
 results/**/*.jsonl
 results/**/*.tsv
-agentic_nlp_pipeline/prompting/**/*.json
+agentic_nlp_pipeline/agentic/**/*.json
 
 # Keep placeholder files
 !**/.gitkeep
