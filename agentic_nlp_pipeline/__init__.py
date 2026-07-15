@@ -1,8 +1,11 @@
 from .evaluation.projectivity import isprojective, projectivity_rate
+from .experiment import experiment
+from .experiment import Experiment
 from .validation.tree_validation import validate_sentence
 from .models import LanguageModel
 from .models import LocalModel
 from .models import LlamaCppModel
+from .prompting import templates
 from .prompting import DepParseAgent
 from .tools import AgentTool
 from .tools import KNNRetrievalTool
@@ -19,4 +22,7 @@ __all__ = [
     "AgentTool",
     "KNNRetrievalTool",
     "TreeValidationTool",
+    "Experiment",
+    "experiment",
+    "templates",
 ]
