@@ -24,7 +24,7 @@ Thumbs.db
 # Data and outputs
 # data/**/raw/
 data/**/external/**/
-data/**/*.conllu
+# data/**/*.conllu
 data/**/*.conll
 data/**/*.zip
 data/**/*.tar

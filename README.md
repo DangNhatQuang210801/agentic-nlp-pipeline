@@ -1,13 +1,14 @@
 # Agentic NLP Pipeline
 
-A multilingual project testing whether an agentic NLP pipeline can improve CoNLL-U annotation quality compared with traditional NLP tools and direct LLM prompting.
+A multilingual project testing whether a dependency parsing agent can improve CoNLL-U dependency annotation quality compared to direct LLM prompting.
 
-## Planned Languages
+## Languages and Data Sources
 
-- Vietnamese: Universal Dependencies Vietnamese VTB
-- German
-- Marathi
-- Low Saxon
+- eng: [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM.git)
+- mar: [UD_Marathi-UFAL](https://github.com/UniversalDependencies/UD_Marathi-UFAL.git)
+- nan: [UD_Taiwanese-Ckiplab](https://github.com/ckiplab/ud.git)
+- nds: [UD_Low_Saxon-LSDC](https://github.com/UniversalDependencies/UD_Low_Saxon-LSDC.git)
+- vie: [UD_Vietnamese-VTB](https://github.com/UniversalDependencies/UD_Vietnamese-VTB.git)
 
 ## Baseline Systems
 
