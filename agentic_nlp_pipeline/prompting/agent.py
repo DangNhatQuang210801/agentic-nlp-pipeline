@@ -7,7 +7,7 @@ from typing import Callable, Any
 import regex as re
 from stanza.models.common.doc import Sentence
 
-from agentic_nlp_pipeline import LanguageModel
+from ..models import LanguageModel
 
 
 # Some of this code is loosely based on the exercise to Lecture 07.
@@ -244,9 +244,9 @@ class DepParseAgent:
             log_dir = Path(__file__).resolve().parent / "agent_logs"
         if file_name is None:
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            file_name = f"run_{timestamp}.json"
+            file_name = f"run_{timestamp}"
 
-        log_path = log_dir / file_name
+        log_path = log_dir / (file_name + ".json")
         with open(log_path, "w") as f:
             json.dump(messages, f, indent=4)
 

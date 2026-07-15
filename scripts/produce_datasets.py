@@ -3,6 +3,8 @@ from pathlib import Path
 from stanza.models.common.doc import Document
 from stanza.utils.conll import CoNLL
 
+from agentic_nlp_pipeline.experiment import UNPARSED
+
 
 def main():
     repo_root = Path(__file__).resolve().parents[1]
@@ -39,9 +41,7 @@ def main():
         subset = [test_doc.sentences[(i + 6) * dist] for i in range(10)]
 
         for sent in subset:
-            sent_path = (
-                test_data_destination / lang_name / f"{sent.sent_id}-original.conllu"
-            )
+            sent_path = test_data_destination / lang_name / (sent.sent_id + UNPARSED)
             doc = Document([])
             doc.sentences.append(sent)
             sent_path.parent.mkdir(parents=True, exist_ok=True)
