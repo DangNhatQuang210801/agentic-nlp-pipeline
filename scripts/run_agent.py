@@ -6,7 +6,7 @@ from stanza.models.common.doc import Sentence
 
 from agentic_nlp_pipeline import DepParseAgent
 from agentic_nlp_pipeline import KNNRetrievalTool, TreeValidationTool
-from agentic_nlp_pipeline.prompting.templates import DIRECT_PARSING_SYSTEM_PROMPT
+from agentic_nlp_pipeline.agentic.templates import DIRECT_PARSING_SYSTEM_PROMPT
 from agentic_nlp_pipeline import LlamaCppModel
 
 
@@ -89,6 +89,6 @@ if __name__ == "__main__":
     sent1.text = " ".join([w.text for w in sent1.words])
     sent1.sent_id = "test-sentence-1"
 
-    agent.run(sent=sent1)
+    agent.dep_parse(sent=sent1)
     print(sent1)
     print(agent.stats)

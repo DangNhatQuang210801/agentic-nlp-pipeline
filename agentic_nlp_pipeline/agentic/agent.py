@@ -7,7 +7,7 @@ from typing import Callable, Any
 import regex as re
 from stanza.models.common.doc import Sentence
 
-from agentic_nlp_pipeline import LanguageModel
+from ..models import LanguageModel
 
 
 # Some of this code is loosely based on the exercise to Lecture 07.
@@ -33,19 +33,23 @@ class DepParseAgent:
 
         Args:
             tool: The tool's defining schema.
-            method: The function associated to the tool.
+            method: The function associated with the tool.
         """
         self.TOOLS.append(tool_schema)
         self.TOOL_REGISTRY[tool_schema["function"]["name"]] = method
 
-    def run(self, sent: Sentence) -> Sentence:
-        """Parse the dependencies of a sentence.
+    def dep_parse(
+        self,
+        sent: Sentence,
+        log_dir: Path | None = None,
+        log_file_name: str | None = None,
+    ):
+        """Parse the dependency tree of a sentence.
 
         Args:
-            sent: The sentence to be parsed.
-
-        Returns:
-            A new sentence with HEAD attributes set by the agent.
+            sent: A Stanza Sentence object.
+            log_dir: Optional Path to a logging directory.
+            log_file_name: Optional name for the log file.
         """
         sent_text = sent.text
         sent_words = [{"id": w.id, "form": w.text} for w in sent.words]
@@ -65,25 +69,23 @@ class DepParseAgent:
             self._update_stats(messages)
             if messages[-1]["role"] != "tool":
                 break
-            # TODO: Break only if output is satisfactory
 
-        self._log_run(messages)
+        self._log_run(messages, log_dir, log_file_name)
         self._update_stats(messages)
 
         tree = self._parse_dep_tree(messages[-1]["content"])
         for word, edge in zip(sent.words, tree):
             word.head = edge["head"]
-        return sent
 
     def _run_iteration(self, messages: list[dict[str, str]]) -> list[dict[str, str]]:
-        """Run one iteration of obtaining a model response and making
+        """One iteration of obtaining a model response and
         executing tool calls.
 
         Args:
-            messages: The list of messages as context.
+            messages: A list of message dicts.
 
         Returns:
-            A new list of messages, including both the new and old messages.
+            A new list of message dicts, including both the new and old messages.
         """
         print(f"\n{'=' * 70}")
         print("🤖  assistant")
@@ -165,7 +167,6 @@ class DepParseAgent:
         tool_call_matches = re.findall(TOOL_CALL_PATTERN, response)
         tool_calls = []
         for raw_tc in tool_call_matches:
-            print(f"Tool call match: {raw_tc}")
             # Parse JSON
             try:
                 tool_calls.append(json.loads(raw_tc))
@@ -192,7 +193,6 @@ class DepParseAgent:
 
             # If the above attempts failed, the tool call is unparsable
             print(f"⚠️ UNPARSABLE TOOL CALL: {raw_tc}")
-        print(f"All tool calls: {tool_calls}")
         return tool_calls
 
     @staticmethod
@@ -231,25 +231,30 @@ class DepParseAgent:
         print(f"{'-' * 70}\n{content}")
 
     @staticmethod
-    def _log_run(messages: list[dict]):
-        """Save the list of messages as a json file.
+    def _log_run(
+        messages: list[dict], log_dir: Path | None = None, file_name: str | None = None
+    ):
+        """Dump the list of message dicts into a json file.
 
         Args:
-            messages: List of messages from system, user, assistant
-                and tools.
+            messages: A list of message dicts.
         """
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        log_dir = Path(__file__).resolve().parent / "agent_logs"
-        log_path = log_dir / f"run_{timestamp}.json"
+        # If no arguments are provided, set defaults
+        if log_dir is None:
+            log_dir = Path(__file__).resolve().parent / "agent_logs"
+        if file_name is None:
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            file_name = f"run_{timestamp}"
+
+        log_path = log_dir / (file_name + ".json")
         with open(log_path, "w") as f:
             json.dump(messages, f, indent=4)
 
     def _update_stats(self, messages: list[dict[str, Any]]):
-        """Calculate stats about messages sent back and forth.
+        """Compute per-role message statistics.
 
         Args:
-            messages: List of messages from system, user, assistant
-                and tools.
+            messages: A list of message dicts.
         """
         self.stats = {}
         for msg in messages:
