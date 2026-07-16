@@ -8,6 +8,7 @@ from .models import LlamaCppModel
 from .agentic import templates
 from .agentic import DepParseAgent
 from .tools import AgentTool
+from .tools import BagOfWordsRetrievalTool
 from .tools import KNNRetrievalTool
 from .tools import TreeValidationTool
 
@@ -20,6 +21,7 @@ __all__ = [
     "LlamaCppModel",
     "DepParseAgent",
     "AgentTool",
+    "BagOfWordsRetrievalTool",
     "KNNRetrievalTool",
     "TreeValidationTool",
     "Experiment",
