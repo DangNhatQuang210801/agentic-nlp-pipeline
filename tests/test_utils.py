@@ -4,7 +4,7 @@ import json
 
 from stanza.models.common.doc import Document, ID, Sentence, TEXT, UPOS
 
-from agentic_nlp_pipeline.prompting.agent import DepParseAgent
+from agentic_nlp_pipeline.agentic.agent import DepParseAgent
 from agentic_nlp_pipeline.evaluation.projectivity import isprojective, projectivity_rate
 from agentic_nlp_pipeline.validation.tree_validation import (
     _has_single_root,
@@ -12,7 +12,11 @@ from agentic_nlp_pipeline.validation.tree_validation import (
     _has_valid_heads,
 )
 from agentic_nlp_pipeline.tools.utils import sentence_to_token_dicts
-from agentic_nlp_pipeline.tools import KNNRetrievalTool, MorphologyLookupTool
+from agentic_nlp_pipeline.tools import (
+    BagOfWordsRetrievalTool,
+    KNNRetrievalTool,
+    MorphologyLookupTool,
+)
 
 
 # ====================================================================
@@ -301,3 +305,42 @@ def test_knn_retrieval_tool(tmp_path):
         )
     )
     assert tool_result[0]["sent_id"] == "s1"
+
+
+def test_bag_of_words_retrieval_tool(tmp_path):
+    train = tmp_path / "toy.conllu"
+    train.write_text(
+        """# sent_id = same-length
+# text = I like cats
+1	I	I	PRON	_	_	2	nsubj	_	_
+2	like	like	VERB	_	_	0	root	_	_
+3	cats	cat	NOUN	_	_	2	obj	_	_
+
+# sent_id = shorter
+# text = I like
+1	I	I	PRON	_	_	2	nsubj	_	_
+2	like	like	VERB	_	_	0	root	_	_
+
+# sent_id = unrelated
+# text = Birds fly away
+1	Birds	bird	NOUN	_	_	2	nsubj	_	_
+2	fly	fly	VERB	_	_	0	root	_	_
+3	away	away	ADV	_	_	2	advmod	_	_
+""",
+        encoding="utf-8",
+    )
+    tool = BagOfWordsRetrievalTool.from_conllu_files({"english": train})
+
+    result = json.loads(
+        tool.search(
+            "english",
+            [
+                {"id": 1, "form": "I"},
+                {"id": 2, "form": "like"},
+                {"id": 3, "form": "dogs"},
+            ],
+            k=2,
+        )
+    )
+
+    assert [item["sent_id"] for item in result] == ["same-length", "shorter"]
