@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from agentic_nlp_pipeline import DepParseAgent, LlamaCppModel, Experiment
+from agentic_nlp_pipeline import DepParseAgent, LocalModel, Experiment
 from agentic_nlp_pipeline.experiment import PARSED_DIRECTLY
 from agentic_nlp_pipeline.agentic import templates
 
@@ -11,7 +11,7 @@ def main():
     data_root = repo_root / "data" / "processed"
 
     # Set up experiment
-    model = LlamaCppModel()
+    model = LocalModel("unsloth/Qwen3.5-9B-GGUF", enable_thinking=True)
     agent = DepParseAgent(model, templates.DIRECT_PARSING_SYSTEM_PROMPT, 10000, 10)
     experiment = Experiment(agent, data_root, PARSED_DIRECTLY)
 
