@@ -23,9 +23,9 @@ dependencies = [
     "python-dotenv",
     "scikit-learn",
     "stanza (>=1.11.1,<2.0.0)",
-    "torch (==2.7.1+xpu)",
-    "torchvision (==0.22.1+xpu)",
-    "torchaudio (==2.7.1+xpu)",
+    # "torch (==2.7.1+xpu)",
+    # "torchvision (==0.22.1+xpu)",
+    # "torchaudio (==2.7.1+xpu)",
     "transformers (>=5.8.0,<6.0.0)",
     "accelerate (>=1.13.0,<2.0.0)",
     "openai (>=2.45.0,<3.0.0)",
@@ -35,10 +35,11 @@ dependencies = [
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[[tool.poetry.source]]
-name = "xpu"
-url = "https://download.pytorch.org/whl/xpu"
-priority = "supplemental"
+# [[tool.poetry.source]]
+# name = "xpu"
+# url = "https://download.pytorch.org/whl/xpu"
+# priority = "supplemental"
+
 
 [[tool.poetry.source]]
 name = "PyPI"
