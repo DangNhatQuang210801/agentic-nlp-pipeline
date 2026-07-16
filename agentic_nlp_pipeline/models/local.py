@@ -12,7 +12,7 @@ class LocalModel:
     """
 
     def __init__(
-        self, model_id: str, device: str = "auto", enable_thinking: bool = False
+        self, model_id: str, gguf_file: str | None = None, device: str = "auto", enable_thinking: bool = False
     ):
         """Load model and tokenizer.
 
@@ -30,7 +30,7 @@ class LocalModel:
         self.tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id,
-            gguf_file=gguf_file,
+            gguf_file=gguf,
             device_map=device,
         )
         self.model.eval()
