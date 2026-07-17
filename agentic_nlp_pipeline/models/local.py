@@ -1,6 +1,7 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import (AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer, BitsAndBytesConfig)
 from threading import Thread
 from transformers import TextIteratorStreamer
+import torch
 
 
 class LocalModel:
