@@ -4,7 +4,7 @@ from stanza.models.common.doc import Sentence
 
 
 def get_unparsed_sentences(
-    root_dir: Path, sup_suffix: str, sub_suffix: str
+    root_dir: Path, sup_suffix: str, sub_suffix: str, limit: int | None = None,
 ) -> list[Path]:
     """Given a parent directory, return all those files with suffix
     `sup_suffix` such that there is no file with the same name but
@@ -21,11 +21,21 @@ def get_unparsed_sentences(
     Yields:
         Paths of unprocessed files.
     """
+
+    # The following is a special case for a single language instead of all langauges:
+    if any(root_dir.rglob(f"*{sup_suffix}")):
+        return _get_diffset_of_paths(root_dir, sup_suffix, sub_suffix)
+
     all_unparsed_sents = []
     for dir in root_dir.iterdir():
         if not dir.is_dir() or len(dir.name) != 3:
             continue
         all_unparsed_sents.extend(_get_diffset_of_paths(dir, sup_suffix, sub_suffix))
+    # return all_unparsed_sents
+
+    # determines the number of sentences to return:
+    if limit is not None:
+        return all_unparsed_sents[:limit]
     return all_unparsed_sents
 
 

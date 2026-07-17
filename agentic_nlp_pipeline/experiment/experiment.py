@@ -10,6 +10,7 @@ PARSED_DIRECTLY = "--parsed-directly.conllu"
 PARSED_AGENTICALLY = "--parsed-agentically.conllu"
 LOG_DIRECTLY = "--log.json"
 LOG_AGENTICALLY = "--log-wt.json"
+limit = 2 # change for number of sentences to parse in one run, None for all sentences to parse
 
 
 class Experiment:
@@ -27,7 +28,7 @@ class Experiment:
 
     def run(self):
         for sent_path in utils.get_unparsed_sentences(
-            self.data_root, UNPARSED, self.new_suffix
+            self.data_root, UNPARSED, self.new_suffix, limit=limit,
         ):
             doc = CoNLL.conll2doc(sent_path)
             sent = doc.sentences[0]

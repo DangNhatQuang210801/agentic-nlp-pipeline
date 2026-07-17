@@ -2,7 +2,7 @@ from pathlib import Path
 
 from stanza.utils.conll import CoNLL
 
-from agentic_nlp_pipeline import DepParseAgent, LlamaCppModel, Experiment
+from agentic_nlp_pipeline import DepParseAgent, LocalModel, Experiment
 from agentic_nlp_pipeline.experiment import PARSED_AGENTICALLY
 from agentic_nlp_pipeline.agentic import templates
 from agentic_nlp_pipeline.tools import (
@@ -16,10 +16,10 @@ from agentic_nlp_pipeline.tools import (
 def main():
     # Find root dir
     repo_root = Path(__file__).resolve().parents[1]
-    data_root = repo_root / "data" / "processed"
+    data_root = repo_root / "data" / "processed" / "eng"
 
     # Set up agent
-    model = LlamaCppModel()
+    model = LocalModel(model_id = "Qwen/Qwen3.5-9B", gguf_file=None, enable_thinking=True)
     agent = DepParseAgent(
         model=model,
         system_prompt=templates.AGENTIC_PARSING_SYSTEM_PROMPT,

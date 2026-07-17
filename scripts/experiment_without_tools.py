@@ -8,7 +8,7 @@ from agentic_nlp_pipeline.agentic import templates
 def main():
     # Find root dir
     repo_root = Path(__file__).resolve().parents[1]
-    data_root = repo_root / "data" / "processed"
+    data_root = repo_root / "data" / "processed" / "eng"
 
     # Set up experiment
     model = LocalModel(model_id = "Qwen/Qwen3.5-9B", gguf_file=None, enable_thinking=True)
