@@ -167,3 +167,54 @@ with open(
         count += 1
         if count == 5:
             break
+
+
+from pathlib import Path
+
+input_file = Path("data/external/nan/UD_Taiwanese-Ckiplab/data/sinica_ud.conllu")
+output_file = Path("data/external/nan/UD_Taiwanese-Ckiplab/sinica_ud_converted.conllu")
+
+with input_file.open("r", encoding="utf-8") as fin, \
+     output_file.open("w", encoding="utf-8") as fout:
+
+    for line in fin:
+        # Preserve comments and blank lines
+        if line.startswith("#") or not line.strip():
+            fout.write(line)
+            continue
+
+        cols = line.rstrip("\n").split("\t")
+
+        # Skip malformed rows
+        if len(cols) != 11:
+            print(f"Skipping malformed row ({len(cols)} cols): {cols}")
+            continue
+
+        (
+            tok_id,     # 1
+            form,       # 2
+            lemma,      # 3
+            coarse_pos, # 4 (unused)
+            xpos,       # 5
+            feats,      # 6
+            upos,       # 7
+            head,       # 8
+            deps,       # 9
+            deprel,     #10
+            misc,       #11
+        ) = cols
+
+        conllu = [
+            tok_id,      # ID
+            form,        # FORM
+            lemma,       # LEMMA
+            upos,        # UPOS
+            xpos,        # XPOS
+            feats,       # FEATS
+            head,        # HEAD
+            deprel,      # DEPREL
+            deps,        # DEPS
+            misc,        # MISC
+        ]
+
+        fout.write("\t".join(conllu) + "\n")
