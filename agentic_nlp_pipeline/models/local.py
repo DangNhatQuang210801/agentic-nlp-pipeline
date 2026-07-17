@@ -14,7 +14,7 @@ class LocalModel:
 
     def __init__(
         self, model_id: str, gguf_file: str | None = None, device: str = "auto",
-          enable_thinking: bool = False,)
+          enable_thinking: bool = False,):
           # load_in_4bit: bool = False):
 
         """Load model and tokenizer.
