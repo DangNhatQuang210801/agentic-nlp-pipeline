@@ -12,8 +12,10 @@ class LocalModel:
     """
 
     def __init__(
-        self, model_id: str, gguf_file: str | None = None, device: str = "auto", enable_thinking: bool = False
-    ):
+        self, model_id: str, gguf_file: str | None = None, device: str = "auto",
+          enable_thinking: bool = False,)
+          # load_in_4bit: bool = False):
+
         """Load model and tokenizer.
 
         Args:
@@ -28,9 +30,16 @@ class LocalModel:
         print(f"Loading model `{model_id}`")
         self.enable_thinking = enable_thinking
         self.tokenizer = AutoTokenizer.from_pretrained(model_id) # , gguf_file=gguf)
+
+        bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_quant_type="nf4")
+
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id,
         #    gguf_file=gguf,
+        quantization_config=bnb_config,
             device_map=device,
         )
         self.model.eval()
