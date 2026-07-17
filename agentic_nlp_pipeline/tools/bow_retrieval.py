@@ -6,15 +6,12 @@ from pathlib import Path
 from stanza.models.common.doc import Document, Sentence
 from stanza.utils.conll import CoNLL
 
-from .retrieval import _sentence_to_json
-from .utils import token_dicts_to_sentence, tool_error, tool_json
+from .utils import token_dicts_to_sentence, tool_error, tool_json, sentence_to_json
 
 
 def _score(query: Sentence, candidate: Sentence) -> float:
     query_words = Counter((word.text or "_").casefold() for word in query.words)
-    candidate_words = Counter(
-        (word.text or "_").casefold() for word in candidate.words
-    )
+    candidate_words = Counter((word.text or "_").casefold() for word in candidate.words)
 
     union_size = sum((query_words | candidate_words).values())
     overlap = (
@@ -25,9 +22,7 @@ def _score(query: Sentence, candidate: Sentence) -> float:
 
     max_length = max(len(query.words), len(candidate.words))
     length_similarity = (
-        min(len(query.words), len(candidate.words)) / max_length
-        if max_length
-        else 1.0
+        min(len(query.words), len(candidate.words)) / max_length if max_length else 1.0
     )
     return (overlap + length_similarity) / 2
 
@@ -40,13 +35,15 @@ class BagOfWordsRetrievalTool:
         "function": {
             "name": "retrieve_similar_sentences_bow",
             "description": (
-                "Find annotated sentences with similar length and "
-                "bag-of-words content."
+                "Find annotated sentences with similar length and content. The content similarity is estimated by calculating a bag-of-words similarity score."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "language": {"type": "string"},
+                    "language": {
+                        "type": "string",
+                        "description": "ISO-3 language code. Options: eng = English, mar = Marathi, nan = Taiwanese, nds = Low German / Low Saxon, vie = Vietnamese",
+                    },
                     "tokens": {
                         "type": "array",
                         "items": {
@@ -58,7 +55,10 @@ class BagOfWordsRetrievalTool:
                             "required": ["id", "form"],
                         },
                     },
-                    "k": {"type": "integer"},
+                    "k": {
+                        "type": "integer",
+                        "description": "Number of examples to return.",
+                    },
                 },
                 "required": ["language", "tokens"],
             },
@@ -95,7 +95,7 @@ class BagOfWordsRetrievalTool:
         try:
             sentence = token_dicts_to_sentence(tokens)
             results = [
-                _sentence_to_json(score, candidate)
+                sentence_to_json(score, candidate)
                 for score, candidate in self.retrieve(language, sentence, k)
             ]
             return tool_json(results)

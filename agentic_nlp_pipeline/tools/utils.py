@@ -68,3 +68,41 @@ def tool_json(payload: Any) -> str:
 
 def tool_error(message: str) -> str:
     return tool_json({"error": message})
+
+
+def ngrams(items: list[str], max_n: int) -> set[tuple[str, ...]]:
+    grams = set()
+    for n in range(1, max_n + 1):
+        grams.update(tuple(items[i : i + n]) for i in range(len(items) - n + 1))
+    return grams
+
+
+def features(sent: Sentence, max_n: int) -> set[tuple[str, tuple[str, ...]]]:
+    features = {
+        ("FORM", gram)
+        for gram in ngrams(
+            [(getattr(word, TEXT) or "_").casefold() for word in sent.words],
+            max_n,
+        )
+    }
+    features.update(
+        ("UPOS", gram)
+        for gram in ngrams(
+            [getattr(word, UPOS) or "_" for word in sent.words],
+            max_n,
+        )
+    )
+    return features
+
+
+def sentence_to_json(score: float, sent: Sentence) -> dict:
+    return {
+        "score": round(score, 4),
+        "sent_id": getattr(sent, "sent_id", ""),
+        "text": getattr(sent, "text", None)
+        or " ".join(getattr(word, TEXT) or "_" for word in sent.words),
+        "tokens": sentence_to_token_dicts(
+            sent,
+            fields=("id", "form", "lemma", "upos", "xpos", "feats", "head", "deprel"),
+        ),
+    }

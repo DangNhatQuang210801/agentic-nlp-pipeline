@@ -1,12 +1,13 @@
-from .base import AgentTool, MorphologyLookupTool
-from .retrieval import KNNRetrievalTool
-from .retrieval2 import BagOfWordsRetrievalTool
+from .base import AgentTool
+from .bow_retrieval import BagOfWordsRetrievalTool
+from .knn_retrieval import KNNRetrievalTool
+from .morphology_lookup import StatisticalMorphologyLookupTool
 from .tree_validation import TreeValidationTool
 
 __all__ = [
     "AgentTool",
     "BagOfWordsRetrievalTool",
-    "MorphologyLookupTool",
+    "StatisticalMorphologyLookupTool",
     "KNNRetrievalTool",
     "TreeValidationTool",
 ]
