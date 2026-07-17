@@ -11,7 +11,7 @@ def main():
     data_root = repo_root / "data" / "processed"
 
     # Set up experiment
-    model = LocalModel("unsloth/Qwen3.5-9B-GGUF", gguf_file="Qwen3.5-9B-Q4_K_M.gguf", enable_thinking=True)
+    model = LocalModel(model_id = "Qwen/Qwen3.5-9B", gguf_file=None, enable_thinking=True)
     agent = DepParseAgent(model, templates.DIRECT_PARSING_SYSTEM_PROMPT, 10000, 10)
     experiment = Experiment(agent, data_root, PARSED_DIRECTLY)
 
