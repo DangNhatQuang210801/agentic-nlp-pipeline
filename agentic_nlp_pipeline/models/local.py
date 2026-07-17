@@ -21,16 +21,16 @@ class LocalModel:
             device: The device where the model is supposed to be loaded onto.
         """
 
-        repo = "unsloth/Qwen3.5-9B-GGUF"
-        gguf = "Qwen3.5-9B-Q4_K_M.gguf"
+        # repo = "unsloth/Qwen3.5-9B-GGUF"
+        # gguf = "Qwen3.5-9B-Q4_K_M.gguf"
 
 
         print(f"Loading model `{model_id}`")
         self.enable_thinking = enable_thinking
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id) # , gguf_file=gguf)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id,
-            gguf_file=gguf,
+        #    gguf_file=gguf,
             device_map=device,
         )
         self.model.eval()
