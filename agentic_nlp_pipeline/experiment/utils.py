@@ -25,15 +25,11 @@ def get_unparsed_sentences(
     for dir in root_dir.iterdir():
         if not dir.is_dir() or len(dir.name) != 3:
             continue
-        all_unparsed_sents.extend(
-            _get_diffset_of_sentences(dir, sup_suffix, sub_suffix)
-        )
+        all_unparsed_sents.extend(_get_diffset_of_paths(dir, sup_suffix, sub_suffix))
     return all_unparsed_sents
 
 
-def _get_diffset_of_sentences(
-    dir: Path, sup_suffix: str, sub_suffix: str
-) -> list[Path]:
+def _get_diffset_of_paths(dir: Path, sup_suffix: str, sub_suffix: str) -> list[Path]:
     """Get file paths to unprocessed files.
 
     Args:
@@ -44,11 +40,24 @@ def _get_diffset_of_sentences(
     Yields:
         Paths of unprocessed files.
     """
-    sup_paths = list(dir.rglob(f"*{sup_suffix}"))
-    sub_paths = list(dir.rglob(f"*{sub_suffix}"))
+    sup_paths = get_paths_by_suffix(dir, sup_suffix)
+    sub_paths = get_paths_by_suffix(dir, sub_suffix)
     sup_sent_ids = {str(path).removesuffix(sup_suffix) for path in sup_paths}
     sub_sent_ids = {str(path).removesuffix(sub_suffix) for path in sub_paths}
     return [Path(sent_id + sup_suffix) for sent_id in sup_sent_ids - sub_sent_ids]
+
+
+def get_paths_by_suffix(dir: Path, suffix: str) -> list[Path]:
+    """Get file paths with a certain suffix.
+
+    Args:
+        dir: The directory in which to look for matching files.
+        suffix: The file name suffix of the files of interest.
+
+    Yields:
+        Paths of matchinf files.
+    """
+    return list(dir.rglob(f"*{suffix}"))
 
 
 def clear_heads(sent: Sentence):

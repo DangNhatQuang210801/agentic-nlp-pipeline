@@ -2,12 +2,14 @@ from pathlib import Path
 
 from stanza.utils.conll import CoNLL
 
-from . import utils
 from ..agentic import DepParseAgent
+from . import utils
 
 UNPARSED = "--original.conllu"
 PARSED_DIRECTLY = "--parsed-directly.conllu"
 PARSED_AGENTICALLY = "--parsed-agentically.conllu"
+LOG_DIRECTLY = "--log.json"
+LOG_AGENTICALLY = "--log-wt.json"
 
 
 class Experiment:

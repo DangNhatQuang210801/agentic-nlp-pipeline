@@ -1,8 +1,7 @@
-from typing import Optional
 from stanza.models.common.doc import Sentence, Document
 
 
-def isprojective(sent: Sentence) -> Optional[bool]:
+def is_projective(sent: Sentence) -> bool:
     """Check if a sentence has a projective tree structure or not.
 
     A tree structure is non-projective if it cannot be drawn without
@@ -41,6 +40,6 @@ def projectivity_rate(doc: Document) -> float:
     """
     n_projective = 0
     for sent in doc.sentences:
-        if isprojective(sent):
+        if is_projective(sent):
             n_projective += 1
     return n_projective / len(doc.sentences)
