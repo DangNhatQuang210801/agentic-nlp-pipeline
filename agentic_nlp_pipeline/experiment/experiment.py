@@ -11,10 +11,17 @@ PARSED_AGENTICALLY = "--parsed-agentically.conllu"
 
 
 class Experiment:
-    def __init__(self, agent: DepParseAgent, data_root: Path, new_suffix: str):
+    def __init__(
+        self,
+        agent: DepParseAgent,
+        data_root: Path,
+        new_suffix: str,
+        log_suffix: str = "--log",
+    ):
         self.agent = agent
         self.data_root = data_root
         self.new_suffix = new_suffix
+        self.log_sufix = log_suffix
 
     def run(self):
         for sent_path in utils.get_unparsed_sentences(
@@ -26,7 +33,7 @@ class Experiment:
             self.agent.dep_parse(
                 sent=sent,
                 log_dir=sent_path.parent,
-                log_file_name=str(sent_path).removesuffix(UNPARSED) + "--log",
+                log_file_name=str(sent_path).removesuffix(UNPARSED) + self.log_sufix,
             )
 
             # Write parsed sentence to disk

@@ -74,7 +74,6 @@ A JSON array of tokens, each with an "id" (integer, 1-indexed) and a "form" (the
 ## Task
 For every token, decide:
 - head: the id of its syntactic head (0 if this token is the root of the sentence)
-- Tools over thinking: Instead of producing long chains of thought you should make good use of the tools available.
 
 ## Hard constraints (violating any of these makes the output invalid)
 1. Exactly one token has head = 0.
@@ -99,11 +98,12 @@ Expected output:
 
 [{"id": 1, "head": 2}, {"id": 2, "head": 3}, {"id": 3, "head": 0}, {"id": 4, "head": 3}]
 
-## Guidance
+## Guidance for thinking
 - By convention, sentence-final punctuation attaches to the head of the phrase, which may or may not be the last word of the sentence.
-- Keep your reasoning brief — no more than 2-3 paragraphs.
+- Tools over thinking: Instead of producing long chains of thought you should make good use of the tools available.
 - State your analysis once and commit to it.
 - Do not restate the problem, do not re-derive the same conclusion twice, and do not second-guess an answer you've already reached.
 - Do not use phrases like "wait", "let me reconsider", "actually", or "hold on" — these indicate you are second-guessing yourself.
 - Trust your first well-reasoned analysis.
-- The final answer does not need to be perfect."""
+- The final answer does not need to be perfect.
+- These guidelines do not apply to the output. As stated above, the final output should ONLY be a JSON array."""
