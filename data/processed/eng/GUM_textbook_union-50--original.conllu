@@ -1,0 +1,20 @@
+# sent_id = GUM_textbook_union-50
+# s_type = decl
+# s_prominence = 2
+# transition = null
+# text = When given the opportunity to serve, many Black regiments did so heroically.
+1	When	when	ADV	WRB	PronType=Int	2	advmod	2:advmod	Discourse=context-circumstance:113->115:0:dm-when-936-_+syn-pst_-937-_|PDTB=Explicit:Temporal.Synchronous:when:936:943-949:937-942;Implicit:Contingency.Cause.Result:so:_:912-935:936-949
+2	given	give	VERB	VBN	Tense=Past|VerbForm=Part|Voice=Pass	11	advcl	11:advcl:when	Cxn=AdverbialWHClause-Reduced-Passive|CxnElt=2:AdverbialWHClause-Reduced-Active.Clause|MSeg=giv-en
+3	the	the	DET	DT	Definite=Def|PronType=Art	4	det	4:det	Entity=(167-abstract-new-nnnnn-cf2-2-sgl
+4	opportunity	opportunity	NOUN	NN	Number=Sing	2	obj	2:obj	MSeg=opportun-ity
+5	to	to	PART	TO	_	6	mark	6:mark	Discourse=purpose-attribute:114->113:0:syn-mdf-939-_+syn-inf-940-_
+6	serve	serve	VERB	VB	VerbForm=Inf	4	acl	4:acl:to	Entity=167)|SpaceAfter=No
+7	,	,	PUNCT	,	_	2	punct	2:punct	_
+8	many	many	ADJ	JJ	Degree=Pos	10	amod	10:amod	Discourse=explanation-evidence:115->109:2:_|Entity=(168-organization-new-nnnnn-cf1-3-coref
+9	Black	Black	ADJ	JJ	Degree=Pos	10	amod	10:amod	_
+10	regiments	regiment	NOUN	NNS	Number=Plur	11	nsubj	11:nsubj	Entity=168)|MSeg=regiment-s
+11	did	do	VERB	VBD	Mood=Ind|Number=Plur|Person=3|Tense=Past|VerbForm=Fin	0	root	0:root	_
+12	so	so	ADV	RB	_	11	advmod	11:advmod	_
+13	heroically	heroically	ADV	RB	Degree=Pos	11	advmod	11:advmod	MSeg=hero-ic-al-ly|SpaceAfter=No
+14	.	.	PUNCT	.	_	11	punct	11:punct	_
+

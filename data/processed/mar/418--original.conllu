@@ -1,0 +1,11 @@
+# sent_id = 418
+# text = भीमा मुलीबरोबर घरी आला.
+# translit = bhīmā mulībarobara gharī ālā.
+1	भीमा	भीमा	PROPN	_	Case=Nom|Gender=Masc|Number=Sing	5	nsubj	_	Translit=bhīmā|LTranslit=bhīmā
+2-3	मुलीबरोबर	_	_	_	_	_	_	_	Translit=mulībarobara
+2	मुली	मुलगी	NOUN	_	Case=Abs|Gender=Fem|Number=Sing	5	obl	_	Translit=mulī|LTranslit=mulagī
+3	बरोबर	बरोबर	ADP	_	_	2	case	_	Translit=barobara|LTranslit=barobara
+4	घरी	घरी	ADV	_	_	5	obl	_	Translit=gharī|LTranslit=gharī
+5	आला	येणे	VERB	_	Aspect=Perf|Gender=Masc|Number=Sing|Person=3|VerbForm=Fin	0	root	_	LTranslit=yeṇe|SpaceAfter=No|Translit=ālā
+6	.	.	PUNCT	_	_	5	punct	_	Translit=.|LTranslit=.
+

@@ -1,0 +1,18 @@
+# sent_id = LSDC_0156_DWF_1933_OWL_ravensbergsk_heinrich-stolte_das-neue-testament
+# text_orig = Suin Erbarmen goet fan Geslecht teo Geslecht bui ollen, doe en fürchtet.
+# text = Syn erbarmen geyt van geslächt to geslächt by allen, dee en vürchtet.
+1	Syn	syn	DET	_	Case=Nom|Gender=Neut|Number=Sing|Poss=Yes|PronType=Prs	2	det	_	lemma_gml=sîn,ēr,sîn
+2	erbarmen	erbarmen	NOUN	_	Case=Nom|Gender=Neut|Number=Sing	3	nsubj	_	lemma_gml=erbarment
+3	geyt	gån	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres	0	root	_	lemma_gml=gân
+4	van	van	ADP	_	AdpType=Prep	5	case	_	lemma_gml=van
+5	geslächt	geslächte	NOUN	_	Case=Dat|Gender=Neut|Number=Sing	3	obl	_	lemma_gml=geslechte
+6	to	to	ADP	_	AdpType=Prep	7	case	_	lemma_gml=tô
+7	geslächt	geslächte	NOUN	_	Case=Dat|Gender=Neut|Number=Sing	3	obl	_	lemma_gml=geslechte
+8	by	by	ADP	_	AdpType=Prep	9	case	_	lemma_gml=bî
+9	allen	al	PRON	_	Case=Dat|Number=Plur|PronType=Tot	3	obl	_	SpaceAfter=No|lemma_gml=al
+10	,	,	PUNCT	_	_	13	punct	_	_
+11	dee	dee	PRON	_	Case=Nom|Number=Plur|PronType=Rel	13	nsubj	_	lemma_gml=dê
+12	en	hee	PRON	_	Case=Acc|Gender=Masc|Number=Sing|Person=3|PronType=Prs	13	obj	_	lemma_gml=hê
+13	vürchtet	vrüchten	VERB	_	Mood=Ind|Number=Plur|Person=3	9	acl:relcl	_	SpaceAfter=No|lemma_gml=vrüchten
+14	.	.	PUNCT	_	_	3	punct	_	_
+

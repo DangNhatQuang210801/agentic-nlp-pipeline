@@ -1,0 +1,17 @@
+# sent_id = LSDC_0207_DNS_1921_HAM_hamborg_de_rode_unnerrock
+# text_orig = PASTER mit en Handgebeerd, as wull he seggen: Tappen af!
+# text = Pastor mid en handgebäärde, as wul hee seggen: Tappen af!
+1	Pastor	pastor	NOUN	_	Case=Nom|Gender=Masc|Number=Sing	0	root	_	lemma_gml=pâstôr
+2	mid	mid	ADP	_	AdpType=Prep	4	case	_	lemma_gml=mit
+3	en	en	DET	_	Case=Acc,Dat|Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	4	det	_	lemma_gml=êin,êine,êin
+4	handgebäärde	handgebäärde	NOUN	_	Case=Acc,Dat|Gender=Masc|Number=Sing	1	orphan	_	SpaceAfter=No|lemma_gml=hantgebêrde
+5	,	,	PUNCT	_	_	9	punct	_	_
+6	as	as	SCONJ	_	_	9	cc	_	lemma_gml=alsô
+7	wul	willen	AUX	_	Mood=Ind,Sub|Number=Sing|Person=3|Tense=Past	9	aux	_	lemma_gml=willen
+8	hee	hee	PRON	_	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	9	nsubj	_	lemma_gml=hê,sê,et
+9	seggen	seggen	VERB	_	VerbForm=Inf	4	acl	_	SpaceAfter=No|lemma_gml=seggen
+10	:	:	PUNCT	_	_	11	punct	_	_
+11	Tappen	tappe	NOUN	_	Case=Acc|Gender=Masc|Number=Plur	9	ccomp	_	lemma_gml=tappe
+12	af	af	ADP	_	_	11	orphan	_	SpaceAfter=No|lemma_gml=af
+13	!	!	PUNCT	_	_	1	punct	_	_
+

@@ -1,0 +1,28 @@
+# sent_id = GUM_speech_newzealand-23
+# s_type = decl
+# s_prominence = 4
+# transition = establishment
+# speaker = DavidClark
+# text = It is a longstanding and successful approach to managing infectious diseases and has proven its worth again in recent weeks.
+1	It	it	PRON	PRP	Case=Nom|Gender=Neut|Number=Sing|Person=3|PronType=Prs	7	nsubj	7:nsubj|14:nsubj	Discourse=explanation-evidence:73->72:1:_|Entity=(59-abstract-giv:act-snsss-cf1*-1-ana)|PDTB=Implicit:Comparison.Similarity:and:_:572-578:579-599
+2	is	be	AUX	VBZ	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	7	cop	7:cop	_
+3	a	a	DET	DT	Definite=Ind|PronType=Art	7	det	7:det	Entity=(95-abstract-new-nnnnn-cf5-5-sgl
+4	longstanding	longstanding	ADJ	JJ	Degree=Pos	7	amod	7:amod	MSeg=long-stand-ing
+5	and	and	CCONJ	CC	_	6	cc	6:cc	_
+6	successful	successful	ADJ	JJ	Degree=Pos	4	conj	4:conj:and|7:amod	MSeg=success-ful
+7	approach	approach	NOUN	NN	Number=Sing	0	root	0:root	_
+8	to	to	SCONJ	IN	_	9	mark	9:mark	Discourse=elaboration-attribute:74->73:0:syn-mdf-585-_+syn-nmn-586-587-_
+9	managing	manage	VERB	VBG	VerbForm=Ger	7	acl	7:acl:to	MSeg=manag-ing
+10	infectious	infectious	ADJ	JJ	Degree=Pos	11	amod	11:amod	Entity=(96-abstract-new-nnnnn-cf3-2-sgl|MSeg=infect-ious
+11	diseases	disease	NOUN	NNS	Number=Plur	9	obj	9:obj	Entity=96)95)|MSeg=dis-ease-s
+12	and	and	CCONJ	CC	_	14	cc	14:cc	Discourse=joint-list_m:75->73:1:dm-and-590-_|PDTB=Explicit:Expansion.Conjunction:and:590:579-589:591-599
+13	has	have	AUX	VBZ	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	14	aux	14:aux	MSeg=ha-s
+14	proven	prove	VERB	VBN	Tense=Past|VerbForm=Part	7	conj	7:conj:and	MSeg=prove-n
+15	its	its	PRON	PRP$	Case=Gen|Gender=Neut|Number=Sing|Person=3|Poss=Yes|PronType=Prs	16	nmod:poss	16:nmod:poss	Entity=(97-abstract-new-nnnnn-cf4-2-sgl(59-abstract-giv:act-snsss-cf1*-1-ana)|MSeg=it-s
+16	worth	worth	NOUN	NN	Number=Sing	14	obj	14:obj	Entity=97)
+17	again	again	ADV	RB	Degree=Pos	14	advmod	14:advmod	_
+18	in	in	ADP	IN	_	20	case	20:case	_
+19	recent	recent	ADJ	JJ	Degree=Pos	20	amod	20:amod	Bridge=52<98:comparison-relative;comparison-time|Entity=(98-time-acc:inf-nnnnn-cf2-2-sgl
+20	weeks	week	NOUN	NNS	Number=Plur	14	obl	14:obl:in	Entity=98)|MSeg=week-s|SpaceAfter=No
+21	.	.	PUNCT	.	_	7	punct	7:punct	_
+

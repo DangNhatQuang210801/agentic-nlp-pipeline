@@ -1,0 +1,16 @@
+# sent_id = text-s72
+# text =Kẻ nhắn tin đó lại còn luôn theo sát vợ Thọ hằng ngày .
+1	Kẻ	kẻ	NOUN	Nc	_	7	nsubj	_	_
+2	nhắn tin	nhắn tin	VERB	V	_	1	compound:vmod	_	_
+3	đó	đó	PRON	Pro	_	1	det:pmod	_	_
+4	lại	lại	ADV	Adv	_	7	advmod	_	_
+5	còn	còn	ADV	Adv	_	7	advmod	_	_
+6	luôn	luôn	ADV	Adv	_	7	advmod	_	_
+7	theo	theo	VERB	V	_	0	root	_	_
+8	sát	sát	ADJ	Adj	_	7	advmod:adj	_	_
+9	vợ	vợ	NOUN	N	_	7	obj	_	_
+10	Thọ	Thọ	PROPN	NNP	_	9	nmod:poss	_	_
+11	hằng	hằng	ADV	Adv	_	12	advmod	_	_
+12	ngày	ngày	NOUN	N	_	7	obl:tmod	_	_
+13	.	.	PUNCT	.	_	7	punct	_	_
+
