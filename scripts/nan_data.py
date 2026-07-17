@@ -154,6 +154,7 @@ eng_test = CoNLL.conll2doc("data/external/eng/UD_English-GUM/en_gum-ud-train.con
 
 print(eng_test.sentences[0])
 
+count = 0
 with open(
     "data/external/nan/UD_Taiwanese-Ckiplab/data/sinica_ud.conllu",
     encoding="utf-8",
@@ -162,8 +163,7 @@ with open(
         if line.startswith("#") or not line.strip():
             continue
 
-        cols = line.rstrip().split("\t")
-        print(f"{len(cols)} columns")
-        for i, col in enumerate(cols, start=1):
-            print(f"{i:2d}: {repr(col)}")
-        break
+        print(line.rstrip())
+        count += 1
+        if count == 5:
+            break
