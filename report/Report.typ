@@ -41,5 +41,5 @@
 
 
 // References
-#bibliography("refs.bib", style: "mla")
+#bibliography("refs.bib", style: "apa")
 
