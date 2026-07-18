@@ -15,10 +15,10 @@ from .utils import (
 
 
 class KNNRetrievalTool:
-    """Retrieve annotated sentences by FORM and UPOS n gram overlap.
+    """Retrieve annotated sentences by FORM and UPOS n-gram overlap.
 
     Documents are stored by language. ``search`` accepts token dictionaries
-    and returns JSON examples with complete CoNLL U annotations.
+    and returns JSON examples with complete CoNLL-U annotations.
     """
 
     schema = {
@@ -60,7 +60,7 @@ class KNNRetrievalTool:
     }
 
     def __init__(self, documents: dict[str, Document], max_n: int = 3):
-        """Store training documents and the largest n gram size."""
+        """Store training documents and the largest n-gram size."""
         self.documents = documents
         self.max_n = max_n
 

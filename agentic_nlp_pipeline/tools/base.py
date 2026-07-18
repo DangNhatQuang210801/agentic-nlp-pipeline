@@ -13,8 +13,8 @@ from .utils import tool_error, tool_json
 class AgentTool(Protocol):
     """Protocol for all agent tools.
 
-    The harness parses raw tool calls into Python arguments before calling a
-    tool. Tools return readable strings, usually JSON.
+    The harness parses raw model tool calls into Python arguments before
+    calling a tool. Tools return model-readable strings, usually JSON.
     """
 
     schema: dict[str, Any]
@@ -25,7 +25,7 @@ class AgentTool(Protocol):
 
 
 class MorphologyLookupTool:
-    """Look up token analyses observed in multilingual CoNLL U training data."""
+    """Look up token analyses observed in multilingual CoNLL-U training data."""
 
     schema = {
         "type": "function",

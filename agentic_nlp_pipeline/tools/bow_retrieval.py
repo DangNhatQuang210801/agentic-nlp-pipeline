@@ -1,4 +1,4 @@
-"""Bag of words retrieval for annotated treebank sentences."""
+"""Bag-of-words retrieval for annotated treebank sentences."""
 
 from collections import Counter
 from pathlib import Path
@@ -32,7 +32,7 @@ class BagOfWordsRetrievalTool:
     """Retrieve annotated sentences by word overlap and sentence length.
 
     Documents are stored by language. ``search`` accepts token dictionaries
-    and returns JSON examples with complete CoNLL U annotations.
+    and returns JSON examples with complete CoNLL-U annotations.
     """
 
     schema = {

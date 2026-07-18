@@ -12,7 +12,7 @@ from .utils import tool_error, tool_json
 class StatisticalMorphologyLookupTool:
     """Return analyses observed for surface forms in each language.
 
-    ``lookup`` accepts token dictionaries and returns frequency ranked lemma,
+    ``lookup`` accepts token dictionaries and returns frequency-ranked lemma,
     UPOS, and FEATS candidates as JSON.
     """
 
