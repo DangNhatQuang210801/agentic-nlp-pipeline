@@ -54,4 +54,5 @@ class TreeValidationTool:
 
     @classmethod
     def as_agent_tool(cls) -> tuple[dict, Callable]:
+        """Return the schema and validation callable."""
         return cls.schema, cls.validate_dependency_tree

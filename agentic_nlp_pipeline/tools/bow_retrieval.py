@@ -1,4 +1,4 @@
-"""Bag-of-words retrieval for annotated treebank sentences."""
+"""Bag of words retrieval for annotated treebank sentences."""
 
 from collections import Counter
 from pathlib import Path
@@ -10,6 +10,7 @@ from .utils import token_dicts_to_sentence, tool_error, tool_json, sentence_to_j
 
 
 def _score(query: Sentence, candidate: Sentence) -> float:
+    """Combine word overlap with sentence length similarity."""
     query_words = Counter((word.text or "_").casefold() for word in query.words)
     candidate_words = Counter((word.text or "_").casefold() for word in candidate.words)
 
@@ -31,7 +32,7 @@ class BagOfWordsRetrievalTool:
     """Retrieve annotated sentences by word overlap and sentence length.
 
     Documents are stored by language. ``search`` accepts token dictionaries
-    and returns JSON examples with complete CoNLL-U annotations.
+    and returns JSON examples with complete CoNLL U annotations.
     """
 
     schema = {
@@ -70,10 +71,12 @@ class BagOfWordsRetrievalTool:
     }
 
     def __init__(self, documents: dict[str, Document]):
+        """Store training documents by language."""
         self.documents = documents
 
     @classmethod
     def from_conllu_files(cls, train_files: dict[str, str | Path]):
+        """Load one training file per language."""
         return cls(
             {
                 language: CoNLL.conll2doc(input_file=str(path))
@@ -83,9 +86,11 @@ class BagOfWordsRetrievalTool:
 
     @classmethod
     def from_documents(cls, documents: dict[str, Document]):
+        """Build the tool from existing Stanza documents."""
         return cls(documents)
 
     def retrieve(self, language: str, sentence: Sentence, k: int = 3):
+        """Return the highest scoring annotated sentences."""
         if language not in self.documents:
             raise ValueError(f"Unknown language: {language}")
 
@@ -96,6 +101,7 @@ class BagOfWordsRetrievalTool:
         return sorted(scored, key=lambda item: item[0], reverse=True)[:k]
 
     def search(self, language: str, tokens: list[dict], k: int = 3) -> str:
+        """Return retrieved sentences as JSON."""
         try:
             sentence = token_dicts_to_sentence(tokens)
             results = [
@@ -107,4 +113,5 @@ class BagOfWordsRetrievalTool:
             return tool_error(str(exc))
 
     def as_agent_tool(self):
+        """Return the schema and search callable."""
         return self.schema, self.search

@@ -12,7 +12,7 @@ from .utils import tool_error, tool_json
 class StatisticalMorphologyLookupTool:
     """Return analyses observed for surface forms in each language.
 
-    ``lookup`` accepts token dictionaries and returns frequency-ranked lemma,
+    ``lookup`` accepts token dictionaries and returns frequency ranked lemma,
     UPOS, and FEATS candidates as JSON.
     """
 
@@ -43,6 +43,7 @@ class StatisticalMorphologyLookupTool:
     }
 
     def __init__(self, documents: dict[str, Document]):
+        """Index analyses by language and surface form."""
         self.index = {}
         for language, document in documents.items():
             language_index = {}
@@ -58,6 +59,7 @@ class StatisticalMorphologyLookupTool:
 
     @classmethod
     def from_conllu_files(cls, train_files: dict[str, str | Path]):
+        """Build an index from one training file per language."""
         return cls(
             {
                 language: CoNLL.conll2doc(input_file=str(path))
@@ -66,6 +68,7 @@ class StatisticalMorphologyLookupTool:
         )
 
     def lookup(self, language: str, tokens: list[dict]) -> str:
+        """Return observed analyses for each token as JSON."""
         if language not in self.index:
             return tool_error(f"Unknown language: {language}")
         if any("id" not in token or "form" not in token for token in tokens):
@@ -85,4 +88,5 @@ class StatisticalMorphologyLookupTool:
         return tool_json(results)
 
     def as_agent_tool(self):
+        """Return the schema and lookup callable."""
         return self.schema, self.lookup

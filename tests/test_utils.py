@@ -224,6 +224,7 @@ My name is C3PO.
 
 
 def test_sentence_to_token_dicts():
+    """Check conversion from a Stanza sentence."""
     sent = Sentence([{ID: 1, TEXT: "Dogs", UPOS: "NOUN"}])
 
     assert sentence_to_token_dicts(sent, fields=("id", "form", "upos")) == [
@@ -232,6 +233,7 @@ def test_sentence_to_token_dicts():
 
 
 def test_morphology_lookup_tool(tmp_path):
+    """Check ranked morphology candidates."""
     train = tmp_path / "morphology.conllu"
     train.write_text(
         """1\tDogs\tdog\tNOUN\t_\tNumber=Plur\t0\troot\t_\t_
@@ -259,12 +261,11 @@ def test_morphology_lookup_tool(tmp_path):
     ]
 
 
-# ====================================================================
-#  retrieval.py
-# ====================================================================
+# Retrieval tools
 
 
 def test_knn_retrieval_tool(tmp_path):
+    """Check nearest neighbour retrieval and output."""
     train = tmp_path / "toy.conllu"
     train.write_text(
         """# sent_id = s1
@@ -308,6 +309,7 @@ def test_knn_retrieval_tool(tmp_path):
 
 
 def test_bag_of_words_retrieval_tool(tmp_path):
+    """Check bag of words retrieval order."""
     train = tmp_path / "toy.conllu"
     train.write_text(
         """# sent_id = same-length

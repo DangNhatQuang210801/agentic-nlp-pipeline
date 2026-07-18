@@ -1,3 +1,5 @@
+"""Reusable dependency parsing tools."""
+
 from .base import AgentTool
 from .bow_retrieval import BagOfWordsRetrievalTool
 from .knn_retrieval import KNNRetrievalTool

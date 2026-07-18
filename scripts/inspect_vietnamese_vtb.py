@@ -1,3 +1,5 @@
+"""Inspect the official Vietnamese VTB data splits."""
+
 from pathlib import Path
 from collections import Counter
 import sys
@@ -8,6 +10,7 @@ TARGET = ("FORM", "LEMMA", "UPOS", "FEATS", "HEAD", "DEPREL")
 
 
 def read_conllu(path):
+    """Read regular token rows from a CoNLL U file."""
     sent = {"meta": {}, "tokens": []}
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line:
@@ -30,6 +33,7 @@ def read_conllu(path):
 
 
 def inspect_file(path):
+    """Collect sentence, token, and field statistics."""
     summary = {
         "sentences": 0,
         "tokens": 0,
@@ -52,6 +56,7 @@ def inspect_file(path):
 
 
 def main():
+    """Print dataset statistics and five test examples."""
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
 

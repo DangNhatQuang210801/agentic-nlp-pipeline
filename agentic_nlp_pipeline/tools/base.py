@@ -1,3 +1,5 @@
+"""Shared tool protocol and morphology lookup."""
+
 from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Protocol
@@ -11,17 +13,19 @@ from .utils import tool_error, tool_json
 class AgentTool(Protocol):
     """Protocol for all agent tools.
 
-    The harness parses raw model tool calls into Python arguments before
-    calling a tool. Tools return model-readable strings, usually JSON.
+    The harness parses raw tool calls into Python arguments before calling a
+    tool. Tools return readable strings, usually JSON.
     """
 
     schema: dict[str, Any]
 
-    def as_agent_tool(self) -> tuple[dict[str, Any], Callable[..., str]]: ...
+    def as_agent_tool(self) -> tuple[dict[str, Any], Callable[..., str]]:
+        """Return the schema and callable used by the pipeline."""
+        ...
 
 
 class MorphologyLookupTool:
-    """Look up token analyses observed in multilingual CoNLL-U training data."""
+    """Look up token analyses observed in multilingual CoNLL U training data."""
 
     schema = {
         "type": "function",
@@ -50,6 +54,7 @@ class MorphologyLookupTool:
     }
 
     def __init__(self, documents: dict[str, Document]):
+        """Index analyses by language and surface form."""
         self.index = {}
         for language, document in documents.items():
             language_index = {}
@@ -65,6 +70,7 @@ class MorphologyLookupTool:
 
     @classmethod
     def from_conllu_files(cls, train_files: dict[str, str | Path]):
+        """Build an index from one training file per language."""
         return cls(
             {
                 language: CoNLL.conll2doc(input_file=str(path))
@@ -73,6 +79,7 @@ class MorphologyLookupTool:
         )
 
     def lookup(self, language: str, tokens: list[dict]) -> str:
+        """Return observed analyses for each token as JSON."""
         if language not in self.index:
             return tool_error(f"Unknown language: {language}")
         if any("id" not in token or "form" not in token for token in tokens):
@@ -92,4 +99,5 @@ class MorphologyLookupTool:
         return tool_json(results)
 
     def as_agent_tool(self):
+        """Return the schema and lookup callable."""
         return self.schema, self.lookup

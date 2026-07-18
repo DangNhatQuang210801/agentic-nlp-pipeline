@@ -15,10 +15,10 @@ from .utils import (
 
 
 class KNNRetrievalTool:
-    """Retrieve annotated sentences by FORM and UPOS n-gram overlap.
+    """Retrieve annotated sentences by FORM and UPOS n gram overlap.
 
     Documents are stored by language. ``search`` accepts token dictionaries
-    and returns JSON examples with complete CoNLL-U annotations.
+    and returns JSON examples with complete CoNLL U annotations.
     """
 
     schema = {
@@ -60,11 +60,13 @@ class KNNRetrievalTool:
     }
 
     def __init__(self, documents: dict[str, Document], max_n: int = 3):
+        """Store training documents and the largest n gram size."""
         self.documents = documents
         self.max_n = max_n
 
     @classmethod
     def from_conllu_files(cls, train_files: dict[str, str | Path], max_n: int = 3):
+        """Load one training file per language."""
         return cls(
             {
                 language: CoNLL.conll2doc(input_file=str(path))
@@ -75,9 +77,11 @@ class KNNRetrievalTool:
 
     @classmethod
     def from_documents(cls, documents: dict[str, Document], max_n: int = 3):
+        """Build the tool from existing Stanza documents."""
         return cls(documents, max_n=max_n)
 
     def retrieve(self, language: str, sent: Sentence, k: int = 3):
+        """Return the highest scoring annotated sentences."""
         if language not in self.documents:
             raise ValueError(f"Unknown language: {language}")
 
@@ -97,6 +101,7 @@ class KNNRetrievalTool:
         tokens: list[dict],
         k: int = 3,
     ) -> str:
+        """Return retrieved sentences as JSON."""
         try:
             sent = token_dicts_to_sentence(tokens)
             results = [
@@ -108,4 +113,5 @@ class KNNRetrievalTool:
             return tool_error(str(exc))
 
     def as_agent_tool(self):
+        """Return the schema and search callable."""
         return self.schema, self.search
