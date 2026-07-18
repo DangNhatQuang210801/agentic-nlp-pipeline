@@ -1,0 +1,12 @@
+# sent_id = 432
+# text = न्यायाधीश केशवचंद्रांच्या मुठीतले .
+# translit = nyāyādhīśa keśavacaṁdrāṁcyā muṭhītale .
+1	न्यायाधीश	न्यायाधीश	NOUN	_	Case=Nom|Gender=Masc|Number=Plur	0	nsubj	_	Translit=nyāyādhīśa|LTranslit=nyāyādhīśa
+2-3	केशवचंद्रांच्या	_	_	_	_	_	_	_	Translit=keśavacaṁdrāṁcyā
+2	केशवचंद्रां	केशवचंद्र	PROPN	_	Case=Abs|Gender=Masc|Number=Sing	1	nmod:poss	_	Translit=keśavacaṁdrāṁ|LTranslit=keśavacaṁdra
+3	च्या	चा	ADP	_	Case=Abs	2	case	_	Translit=cyā|LTranslit=cā
+4-5	मुठीतले	_	_	_	_	_	_	_	Translit=muṭhītale
+4	मुठी	मुठ	NOUN	_	Case=Abs|Gender=Fem|Number=Sing	1	root	_	Translit=muṭhī|LTranslit=muṭha
+5	तले	तील	ADP	_	_	4	case	_	Translit=tale|LTranslit=tīla
+6	.	.	PUNCT	_	_	1	punct	_	Translit=.|LTranslit=.
+

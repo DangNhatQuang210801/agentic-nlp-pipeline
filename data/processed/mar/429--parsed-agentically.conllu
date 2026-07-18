@@ -1,0 +1,9 @@
+# sent_id = 429
+# text = केशवचंद्राने न्यायालयात फिर्याद केली.
+# translit = keśavacaṁdrāne nyāyālayāta phiryāda kelī.
+1	केशवचंद्राने	केशवचंद्र	PROPN	_	Case=Erg|Gender=Masc|Number=Sing	4	nsubj	_	Translit=keśavacaṁdrāne|LTranslit=keśavacaṁdra
+2	न्यायालयात	न्यायालय	NOUN	_	Case=Loc|Gender=Masc|Number=Sing	4	obl	_	Translit=nyāyālayāta|LTranslit=nyāyālaya
+3	फिर्याद	फिर्याद	NOUN	_	Case=Acc|Gender=Fem|Number=Sing	4	obj	_	Translit=phiryāda|LTranslit=phiryāda
+4	केली	करणे	VERB	_	Aspect=Perf|Gender=Fem|Number=Sing|Person=3|VerbForm=Fin	0	root	_	LTranslit=karaṇe|SpaceAfter=No|Translit=kelī
+5	.	.	PUNCT	_	_	4	punct	_	Translit=.|LTranslit=.
+
