@@ -44,6 +44,10 @@ def sentence_to_token_dicts(
 
 def token_dicts_to_sentence(tokens: list[dict[str, Any]]) -> Sentence:
     """Build a Stanza sentence from parsed model/tool token dictionaries."""
+    if isinstance(tokens, str):
+        tokens = json.loads(tokens)
+    if not isinstance(tokens, list) or not all(isinstance(t, dict) for t in tokens):
+        raise TypeError(f"Expected list of token dicts, got: {tokens!r}")
     return Sentence(
         [
             {
