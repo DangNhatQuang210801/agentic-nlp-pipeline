@@ -1,8 +1,11 @@
 # Agentic NLP Pipeline
 
-A multilingual project testing whether a dependency parsing agent can improve CoNLL-U dependency annotation quality compared to direct LLM prompting.
+A multilingual project testing whether a dependency parsing agent can improve CoNLL-U dependency annotation quality compared to direct LLM prompting. 
+
 
 ## Languages and Data Sources
+
+We have a special interest in low-resource languages and chose to run our experiment on the native languages of our team members.
 
 - eng: [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM.git)
 - mar: [UD_Marathi-UFAL](https://github.com/UniversalDependencies/UD_Marathi-UFAL.git)
@@ -10,22 +13,64 @@ A multilingual project testing whether a dependency parsing agent can improve Co
 - nds: [UD_Low_Saxon-LSDC](https://github.com/UniversalDependencies/UD_Low_Saxon-LSDC.git)
 - vie: [UD_Vietnamese-VTB](https://github.com/UniversalDependencies/UD_Vietnamese-VTB.git)
 
-## Baseline Systems
 
+## Experiment
+
+In our study, the following sources of truth are compared against each other:
 - Gold Universal Dependencies treebanks as reference data
-- Traditional NLP tools for automatic CoNLL-U prediction
 - Direct LLM prompting without agentic repair
 - Agentic NLP pipeline with iterative inspection and correction
 
+
 ## Evaluation Metrics
 
-Initial evaluation will focus on fields that can be compared directly across CoNLL-U files:
+The scope of our project is reduced to predicting the HEAD attribute. The most important evaluation metric is therefore the unlabeled attachment score (UAS), which is just the ratio of correctly predicted heads.
 
-- FORM/tokenization agreement
-- LEMMA accuracy
-- UPOS accuracy
-- FEATS accuracy when morphological features are available
-- HEAD attachment accuracy, later
-- DEPREL accuracy, later
 
-The first stage is dataset verification: inspect available treebanks, confirm field coverage, and identify tokenization issues before running any parser, LLM prompt, or repair agent.
+## Reproduction
+**Requirements:**
+- Git
+- Python 3.12
+- Poetry
+- (Optional) A local chat completion server (e.g. llama.cpp) available at http://localhost:8080/v1
+
+Clone the repository with
+```shell
+git clone git@github.com:DangNhatQuang210801/agentic-nlp-pipeline.git
+```
+
+Open the repository root in the terminal and install the project dependencies with
+```shell
+poetry install
+```
+
+> [!WARNING]  
+> Due to what hardware was available to us, this installs an XPU-version of PyTorch. If you want to run the experiment on Cuda, replace this with the normal version. PyTorch is not needed at all if you run the experiment using a local llama.cpp server for inference.
+
+To fetch the required third-party data, run
+```shell
+poetry run python scripts/fetch_corpus_data.py
+```
+
+After that, run the following script to sample 10 sentences per language with increasing length:
+```shell
+poetry run python scripts/produce_datasets.py
+```
+
+To parse the dependencies of the sample sentences without tools run
+```shell
+poetry run python scripts/experiment_without_tools.py
+```
+
+To parse the dependencies of the sample sentences with tools run
+```shell
+poetry run python scripts/experiment_with_tools.py
+```
+
+> [!WARNING]  
+> The current setup expects a chat completion server to be running at http://localhost:8080/v1. Use `LocalModel` if you want to load a model in PyTorch instead.
+
+Once the experiments are done running, you can compile the results into a CSV-file by executing
+```shell
+poetry run python scripts/data_analysis.py
+```
