@@ -1,0 +1,18 @@
+# newpar
+# newpar_block = p (6 s)
+# sent_id = GUM_essay_system-6
+# s_type = decl
+# s_prominence = 2
+# transition = null
+# text = The General Motors plant in Fremont was a disaster.
+1	The	the	DET	DT	Definite=Def|PronType=Art	4	det	4:det	Discourse=explanation-evidence:7->107:3:_|Entity=(17-place-new-sssss-cf1-2,4-coref
+2	General	General	ADJ	NNP	Degree=Pos	4	amod	3:amod	Entity=(18-organization-new-sssss-cf4-1,2-coref-General_Motors
+3	Motors	Motor	PROPN	NNP	Number=Sing	4	compound	4:compound	Entity=18)
+4	plant	plant	NOUN	NN	Number=Sing	7	nsubj	9:nsubj	_
+5	in	in	ADP	IN	_	4	case	6:case	_
+6	Fremont	Fremont	PROPN	NNP	Number=Sing	5	nmod	4:nmod:in	Entity=(19-place-new-nsnss-cf2-1-coref-Fremont)17)
+7	was	be	AUX	VBD	Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin	0	cop	9:cop	_
+8	a	a	DET	DT	Definite=Ind|PronType=Art	9	det	9:det	Entity=(20-abstract-new-nnnnn-cf3-2-sgl
+9	disaster	disaster	NOUN	NN	Number=Sing	7	root	0:root	Entity=20)|SpaceAfter=No
+10	.	.	PUNCT	.	_	9	punct	9:punct	_
+

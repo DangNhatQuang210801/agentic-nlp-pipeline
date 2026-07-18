@@ -1,0 +1,32 @@
+# newpar
+# newpar_block = p (6 s)
+# sent_id = GUM_essay_fear-29
+# s_type = decl
+# s_prominence = 2
+# transition = smooth-shift
+# text = Tribalism is the biological loophole that many politicians have banked on for a long time: tapping into our fears and tribal instincts.
+1	Tribalism	tribalism	NOUN	NN	Number=Sing	0	nsubj	5:nsubj	Discourse=context-background:66->70:3:_|Entity=(4-abstract-giv:act-sssss-cf2-1-coref-Tribalism)|MSeg=Trib-al-ism
+2	is	be	AUX	VBZ	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	1	cop	5:cop	_
+3	the	the	DET	DT	Definite=Def|PronType=Art	2	det	5:det	Entity=(100-abstract-new-nnnnn-cf4-3-sgl(4-abstract-giv:act-sssss-cf2-3-coref-Tribalism
+4	biological	biological	ADJ	JJ	Degree=Pos	3	amod	5:amod	MSeg=bio-log-ic-al
+5	loophole	loophole	NOUN	NN	Number=Sing	4	root	0:root|10:obl:on	MSeg=loop-hole
+6	that	that	PRON	WDT	PronType=Rel	5	obl	5:ref	Discourse=elaboration-attribute:67->66:0:syn-mdf-568-_+syn-relcl-569,573-_
+7	many	many	ADJ	JJ	Degree=Pos	6	amod	8:amod	Entity=(101-person-new-nnnnn-cf3-2-sgl
+8	politicians	politician	NOUN	NNS	Number=Plur	7	nsubj	10:nsubj	Entity=101)|MSeg=politic-ian-s
+9	have	have	AUX	VBP	Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin	8	aux	10:aux	_
+10	banked	bank	VERB	VBN	Tense=Past|VerbForm=Part	9	acl:relcl	5:acl:relcl	MSeg=bank-ed
+11	on	on	ADP	IN	_	10	case	6:case	_
+12	for	for	ADP	IN	_	11	case	15:case	_
+13	a	a	DET	DT	Definite=Ind|PronType=Art	12	det	15:det	Entity=(102-time-new-nnnnn-cf5-3-sgl
+14	long	long	ADJ	JJ	Degree=Pos	13	amod	15:amod	_
+15	time	time	NOUN	NN	Number=Sing	14	obl	10:obl:for	Entity=102)4)|SpaceAfter=No
+16	:	:	PUNCT	:	_	15	punct	17:punct	_
+17	tapping	tap	VERB	VBG	Tense=Pres|VerbForm=Part	16	parataxis	5:parataxis	Discourse=elaboration-additional:68->66:1:sem-lxchn-564,585-_+grf-col-579-_|MSeg=tapp-ing
+18	into	into	ADP	IN	_	17	case	20:case	MSeg=in-to
+19	our	our	PRON	PRP$	Case=Gen|Number=Plur|Person=1|Poss=Yes|PronType=Prs	18	nmod:poss	20:nmod:poss	Entity=(103-abstract-new-nnnnn-cf6-2-sgl(3-person-giv:act-snssn-cf1*-1-ana)
+20	fears	fear	NOUN	NNS	Number=Plur	19	obl	17:obl:into	Entity=103)|MSeg=fear-s
+21	and	and	CCONJ	CC	_	20	cc	23:cc	_
+22	tribal	tribal	ADJ	JJ	Degree=Pos	21	amod	23:amod	Entity=(104-abstract-new-nsnnn-cf7-2-sgl|MSeg=trib-al
+23	instincts	instinct	NOUN	NNS	Number=Plur	22	conj	17:obl:into|20:conj:and	Entity=104)100)|MSeg=instinct-s|SpaceAfter=No
+24	.	.	PUNCT	.	_	23	punct	5:punct	_
+
