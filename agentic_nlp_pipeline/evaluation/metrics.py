@@ -3,15 +3,21 @@ from pathlib import Path
 from typing import overload
 
 import pandas as pd
+import regex as re
 from stanza.models.common.doc import Document, Sentence
 from stanza.utils.conll import CoNLL
 
 from ..experiment.utils import get_paths_by_suffix
 from .projectivity import is_projective
+from ..validation import validate_sentence
 
 
 def compile_df(
-    repo_root: Path, gold_suffix: str, pred_suffix: str, log_suffix: str
+    repo_root: Path,
+    gold_suffix: str,
+    pred_suffix: str,
+    log_suffix: str,
+    with_tools: bool,
 ) -> pd.DataFrame:
     data = {
         "sent_id": [],
@@ -21,7 +27,13 @@ def compile_df(
         "uas": [],
         "original_projective": [],
         "parsed_successfully": [],
+        "has_valid_tree_structure": [],
+        "with_tools": [],
         "n_tool_calls": [],
+        "lookup_morphology": [],
+        "retrieve_similar_sentences": [],
+        "retrieve_similar_sentences_bow": [],
+        "validate_dependency_tree": [],
     }
     for language in ("eng", "nds", "nan", "mar", "vie"):
         data_root = repo_root / "data" / "processed" / language
@@ -57,7 +69,21 @@ def compile_df(
             data["uas"].append(n_correct / n_words)
             data["original_projective"].append(original_projective)
             data["parsed_successfully"].append(parsed_successfully)
+            data["has_valid_tree_structure"].append(validate_sentence(pred_sent)[0])
+            data["with_tools"].append(with_tools)
             data["n_tool_calls"].append(n_tool_calls)
+            data["lookup_morphology"].append(
+                len(re.findall(r"'lookup_morphology'", str(message_log)))
+            )
+            data["retrieve_similar_sentences"].append(
+                len(re.findall("'retrieve_similar_sentences'", str(message_log)))
+            )
+            data["retrieve_similar_sentences_bow"].append(
+                len(re.findall("'retrieve_similar_sentences_bow'", str(message_log)))
+            )
+            data["validate_dependency_tree"].append(
+                len(re.findall("'validate_dependency_tree'", str(message_log)))
+            )
 
     return pd.DataFrame(data)
 
@@ -71,7 +97,10 @@ def _get_n_tool_calls(messages: list[dict]) -> int:
 
 
 def _was_parsed_successfully(sent: Sentence) -> bool:
-    return sent.words[0].head is None
+    for i, word in enumerate(sent.words):
+        if word.head != i:
+            return True
+    return False
 
 
 @overload
