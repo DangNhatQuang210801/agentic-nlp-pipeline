@@ -1,0 +1,6 @@
+# sent_id = 943
+# text = 堅強的毅力
+1	堅強	_	VERB	VH11	_	3	acl	_	_
+2	的	_	PART	DE	_	1	mark_relcl	_	_
+3	毅力	_	NOUN	Nad	_	0	root	_	_
+

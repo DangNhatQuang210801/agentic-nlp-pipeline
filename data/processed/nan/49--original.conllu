@@ -1,0 +1,7 @@
+# sent_id = 49
+# text = 讓大地充滿生機
+1	讓	_	VERB	VL4	_	0	root	_	_
+2	大地	_	NOUN	Nab	_	1	obj	_	_
+3	充滿	_	VERB	VJ3	_	1	xcomp	_	_
+4	生機	_	NOUN	Nad	_	3	obj	_	_
+
