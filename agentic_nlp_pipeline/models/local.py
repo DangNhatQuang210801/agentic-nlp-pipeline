@@ -1,6 +1,6 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
 from threading import Thread
-from transformers import TextIteratorStreamer
+
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 
 
 class LocalModel:
@@ -29,6 +29,7 @@ class LocalModel:
         )
         self.model.eval()
 
+        # Add the right EOS-token to the list
         im_end_id = self.tokenizer.convert_tokens_to_ids("<|im_end|>")
         existing = self.model.generation_config.eos_token_id
         if isinstance(existing, int):
@@ -92,6 +93,7 @@ class LocalModel:
         thread = Thread(target=self.model.generate, kwargs=generation_kwargs)  # type: ignore
         thread.start()
 
+        # Streaming the generation to the console
         parts: list[str] = []
         for token_text in streamer:
             print(token_text, end="", flush=True)

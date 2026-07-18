@@ -1,5 +1,6 @@
 import json
 from typing import cast
+
 from openai import OpenAI
 from openai.types.chat import ChatCompletionMessageParam, ChatCompletionToolParam
 
@@ -49,6 +50,7 @@ class LlamaCppModel:
         reasoning_parts: list[str] = []
         tool_call_chunks: dict[int, dict] = {}
 
+        # Streaming the generation to the console
         for chunk in stream:
             delta = chunk.choices[0].delta
             reasoning = getattr(delta, "reasoning_content", None)
