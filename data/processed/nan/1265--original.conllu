@@ -1,0 +1,6 @@
+# sent_id = 1265
+# text = 綿長的大安溪
+1	綿長	_	VERB	VH11	_	3	acl	_	_
+2	的	_	PART	DE	_	1	mark_relcl	_	_
+3	大安溪	_	PROPN	Nca	_	0	root	_	_
+
