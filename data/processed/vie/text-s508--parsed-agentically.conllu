@@ -1,0 +1,17 @@
+# sent_id = text-s508
+# text =Ông Út Kang giải thích : là để tránh trái ( lựu đạn ) của địch .
+1	Ông	ông	NOUN	Nc	_	2	clf:det	_	_
+2	Út Kang	Út Kang	PROPN	NNP	_	3	nsubj	_	_
+3	giải thích	giải thích	VERB	V	_	0	root	_	_
+4	:	:	PUNCT	:	_	3	punct	_	_
+5	là	là	AUX	V	_	3	parataxis	_	_
+6	để	để	ADP	Pre	_	7	mark:pcomp	_	_
+7	tránh	tránh	VERB	V	_	3	advcl	_	_
+8	trái	trái	NOUN	N	_	7	obj	_	_
+9	(	(	PUNCT	(	_	10	punct	_	_
+10	lựu đạn	lựu đạn	NOUN	N	_	8	appos	_	_
+11	)	)	PUNCT	)	_	8	punct	_	_
+12	của	của	ADP	Pre	_	13	case	_	_
+13	địch	địch	NOUN	N	_	8	nmod:poss	_	_
+14	.	.	PUNCT	.	_	13	punct	_	_
+

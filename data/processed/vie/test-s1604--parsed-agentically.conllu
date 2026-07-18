@@ -1,0 +1,14 @@
+# sent_id = test-s1604
+# text =Nếu chặn bắt ngay được từ biên giới thì khỏi nói .
+1	Nếu	nếu	SCONJ	SC	_	10	mark	_	_
+2	chặn	chặn	VERB	V	_	1	advcl	_	_
+3	bắt	bắt	VERB	V	_	2	xcomp	_	_
+4	ngay	ngay	PART	Prt	_	2	discourse	_	_
+5	được	được	ADV	Adv	_	3	advmod	_	_
+6	từ	từ	ADP	Pre	_	2	case	_	_
+7	biên giới	biên giới	NOUN	N	_	6	obl	_	_
+8	thì	thì	SCONJ	SC	_	10	mark	_	_
+9	khỏi	khỏi	VERB	V	_	10	root	_	_
+10	nói	nói	VERB	V	_	0	xcomp	_	_
+11	.	.	PUNCT	.	_	10	punct	_	_
+

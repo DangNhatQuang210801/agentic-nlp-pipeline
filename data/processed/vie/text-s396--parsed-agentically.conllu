@@ -1,0 +1,18 @@
+# sent_id = text-s396
+# text =Vì vậy khi nhập dữ liệu mới mà có sự trùng hợp thì máy tính sẽ báo ngay .
+1	Vì vậy	vì vậy	SCONJ	SC	_	13	mark	_	_
+2	khi	khi	NOUN	N	_	13	obl:tmod	_	_
+3	nhập	nhập	VERB	V	_	2	acl:tmod	_	_
+4	dữ liệu	dữ liệu	NOUN	N	_	3	obj	_	_
+5	mới	mới	ADJ	Adj	_	4	amod	_	_
+6	mà	mà	SCONJ	SC	_	3	mark	_	_
+7	có	có	VERB	V	_	6	conj	_	_
+8	sự	sự	NOUN	Nc	_	9	obj	_	_
+9	trùng hợp	trùng hợp	VERB	V	_	7	acl:tonp	_	_
+10	thì	thì	SCONJ	SC	_	13	mark	_	_
+11	máy tính	máy tính	NOUN	N	_	13	nsubj	_	_
+12	sẽ	sẽ	ADV	Adv	_	13	advmod	_	_
+13	báo	báo	VERB	V	_	0	root	_	_
+14	ngay	ngay	PART	Prt	_	13	discourse	_	_
+15	.	.	PUNCT	.	_	14	punct	_	_
+
