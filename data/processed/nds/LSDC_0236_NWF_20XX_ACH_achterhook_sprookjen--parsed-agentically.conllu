@@ -1,0 +1,25 @@
+# sent_id = LSDC_0236_NWF_20XX_ACH_achterhook_sprookjen
+# text_orig = I’j wet toch dat ik weg wille en da-k haost hebbe?” foeteren e teggen den bedremmelden knech.
+# text  = Y wettet toch dat ik weg wille en dat ik håst hebbe?” futeren hee teggen den bedrämmelden knecht.
+1	Y	jy	PRON	_	Case=Nom|Number=Plur,Sing|Person=2|PronType=Prs	7	nsubj	_	lemma[gml]=gî
+2	wettet	weaten	VERB	_	Mood=Ind|Number=Plur|Person=2|Tense=Pres	1	ccomp	_	lemma[gml]=wēten
+3	toch	doch	ADV	_	_	2	advmod	_	lemma[gml]=doch
+4	dat	dat	SCONJ	_	_	3	mark	_	lemma[gml]=dat
+5	ik	ik	PRON	_	Case=Nom|Number=Sing|Person=1|PronType=Prs	4	nsubj	_	lemma[gml]=ik
+6	weg	weg	ADV	_	_	5	advmod	_	lemma[gml]=wech
+7	wille	willen	VERB	_	Mood=Ind|Number=Sing|Person=1|Tense=Pres	6	ccomp	_	lemma[gml]=willen
+8	en	un	CCONJ	_	_	7	cc	_	lemma[gml]=ende
+9	dat	dat	SCONJ	_	_	8	mark	_	lemma[gml]=dat
+10	ik	ik	PRON	_	Case=Nom|Number=Sing|Person=1|PronType=Prs	9	nsubj	_	lemma[gml]=ik
+11	håst	håst	NOUN	_	Case=Acc|Gender=Fem|Number=Sing	10	obj	_	lemma[gml]=hâst
+12	hebbe	hebben	VERB	_	Mood=Ind|Number=Sing|Person=1|Tense=Pres	11	conj	_	SpaceAfter=No|lemma[gml]=hebben
+13	?	?	PUNCT	_	_	12	punct	_	SpaceAfter=No
+14	”	”	PUNCT	_	_	13	punct	_	_
+15	futeren	futeren	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	14	root	_	lemma[gml]=fûteren
+16	hee	hee	PRON	_	Case=Nom|Gender=Masc|Number=Sing|Person=3|PronType=Prs	15	nsubj	_	lemma[gml]=hê,sê,et
+17	teggen	geagen	ADP	_	AdpType=Prep	16	case	_	lemma[gml]=tēgen
+18	den	de	DET	_	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|PronType=Art	17	det	_	lemma[gml]=dê,dê,dat
+19	bedrämmelden	bedrämmeld	ADJ	_	Case=Acc|Degree=Pos|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	18	amod	_	lemma[gml]=bedremmelt
+20	knecht	knecht	NOUN	_	Case=Acc|Gender=Masc|Number=Sing	19	obl	_	SpaceAfter=No|lemma[gml]=knecht
+21	.	.	PUNCT	_	_	20	punct	_	_
+
