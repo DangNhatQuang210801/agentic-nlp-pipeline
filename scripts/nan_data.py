@@ -170,9 +170,21 @@ with open(
 
 
 from pathlib import Path
+from collections import Counter
 
 input_file = Path("data/external/nan/UD_Taiwanese-Ckiplab/data/sinica_ud.conllu")
 output_file = Path("data/external/nan/UD_Taiwanese-Ckiplab/sinica_ud_converted.conllu")
+
+# getting count of columns in each row of the input:
+num = [
+    len(line.rstrip().split("\t"))
+    for line in open(input_file, encoding="utf-8")
+    if line.strip() and not line.startswith("#")
+]
+
+print(Counter(num))
+
+# converting the input file to the Conllu format:
 
 with input_file.open("r", encoding="utf-8") as fin, \
      output_file.open("w", encoding="utf-8") as fout:
@@ -186,7 +198,7 @@ with input_file.open("r", encoding="utf-8") as fin, \
         cols = line.rstrip("\n").split("\t")
 
         # Skip malformed rows
-        if len(cols) != 11:
+        if len(cols) != 12:
             print(f"Skipping malformed row ({len(cols)} cols): {cols}")
             continue
 
@@ -199,9 +211,10 @@ with input_file.open("r", encoding="utf-8") as fin, \
             feats,      # 6
             upos,       # 7
             head,       # 8
-            deps,       # 9
-            deprel,     #10
-            misc,       #11
+            empty,      # 9 (unused)
+            deps,       # 10
+            deprel,     #11
+            misc,       #12
         ) = cols
 
         conllu = [
@@ -218,3 +231,5 @@ with input_file.open("r", encoding="utf-8") as fin, \
         ]
 
         fout.write("\t".join(conllu) + "\n")
+
+

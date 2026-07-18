@@ -41,7 +41,7 @@ repos = {
         "UD_Low_Saxon-LSDC",
         "https://github.com/UniversalDependencies/UD_Low_Saxon-LSDC.git",
     ),
-    # "nan": ("UD_Taiwanese-Ckiplab", "https://github.com/ckiplab/ud.git"),
+    "nan": ("UD_Taiwanese-Ckiplab", "https://github.com/ckiplab/ud.git"),
 }
 
 repo_root = Path(__file__).resolve().parents[1]
