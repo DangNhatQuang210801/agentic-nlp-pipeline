@@ -29,18 +29,26 @@ def main():
 
     # Load documents
     treebanks = {}
-    for dir in (repo_root / "data" / "external").iterdir():
+    ext_dir = repo_root / "data" / "external"
+    print(f"Looking in: {ext_dir}  (exists={ext_dir.exists()})")
+
+    for dir in ext_dir.iterdir():
+        print(f"  found entry: {dir}  (is_dir={dir.is_dir()})")
+        if not dir.is_dir():
+            continue # iterdir() also yields files, not just subdirectories
         train_set_paths = list(dir.rglob("*train*.conllu"))
+        print(f"    train_set_paths: {train_set_paths}")
         if not train_set_paths:
             continue
 
         # dir.name corresponds to ISO-3 language code
         treebanks[dir.name] = CoNLL.conll2doc(train_set_paths[0])
-    """
+    print(f"treebanks keys: {list(treebanks.keys())}")
+    
     for tb in treebanks:
         print(tb)
     return
-    """
+    
 
     # Register tools
     agent.register_tool(*BagOfWordsRetrievalTool(treebanks).as_agent_tool())
