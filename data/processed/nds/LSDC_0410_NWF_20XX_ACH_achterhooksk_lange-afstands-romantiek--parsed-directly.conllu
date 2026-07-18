@@ -1,0 +1,27 @@
+# sent_id = LSDC_0410_NWF_20XX_ACH_achterhooksk_lange-afstands-romantiek
+# text_orig = Ze hadden al héél wat foto’s emaakt en maken ne rondreize deur Europa, ’n anderen dag zollen ze naor Boedapest gaon.
+# text = See hadden al heyl wat fotos emaked en maken ne rundreise döär Europa, den anderen dag sullen see når Budapest gån.
+1	See	see	PRON	_	Case=Nom|Number=Plur|Person=3|PronType=Prs	2	nsubj	_	lemma_gml=sê
+2	hadden	hebben	AUX	_	Mood=Ind|Number=Plur|Person=3|Tense=Past	0	aux	_	lemma_gml=hebben
+3	al	al	ADV	_	_	2	advmod	_	lemma_gml=al
+4	heyl	heyl	ADJ	_	Degree=Pos	2	amod	_	lemma_gml=hêil
+5	wat	wat	PRON	_	Case=Acc|Gender=Neut|Number=Sing|PronType=Ind	6	det	_	lemma_gml=watte
+6	fotos	foto	NOUN	_	Case=Acc|Gender=Neut|Number=Plur	7	obj	_	lemma_gml=fôtô
+7	emaked	maken	VERB	_	Tense=Past|VerbForm=Part	2	root	_	lemma_gml=māken
+8	en	un	CCONJ	_	_	7	cc	_	lemma_gml=ende
+9	maken	maken	VERB	_	Mood=Ind|Number=Plur|Person=3|Tense=Past	8	conj	_	lemma_gml=māken
+10	ne	en	DET	_	Case=Acc|Definite=Ind|Gender=Fem|Number=Sing|PronType=Art	11	det	_	lemma_gml=êin,êine,êin
+11	rundreise	rundreise	NOUN	_	Case=Acc|Gender=Fem|Number=Sing	9	obj	_	lemma_gml=runtrêise
+12	döär	döär	ADP	_	AdpType=Prep	13	case	_	lemma_gml=dȫr
+13	Europa	Europa	PROPN	_	Number=Sing	11	nmod	_	SpaceAfter=No|lemma_gml=europa
+14	,	,	PUNCT	_	_	13	punct	_	_
+15	den	en	DET	_	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|PronType=Art	16	det	_	lemma_gml=dê,dê,dat
+16	anderen	ander	ADJ	_	Case=Acc|Degree=Pos|Gender=Masc|Number=Sing	17	amod	_	lemma_gml=ander
+17	dag	dag	NOUN	_	Case=Acc|Gender=Masc|Number=Sing	18	obl	_	lemma_gml=dach
+18	sullen	sköälen	AUX	_	Mood=Ind|Number=Plur|Person=3|Tense=Past	2	aux	_	lemma_gml=schȫlen
+19	see	see	PRON	_	Case=Nom|Number=Plur|Person=3|PronType=Prs	18	nsubj	_	lemma_gml=sê
+20	når	nå	ADP	_	AdpType=Prep	22	case	_	lemma_gml=nâ
+21	Budapest	Budapest	PROPN	_	Number=Sing	20	obl	_	lemma_gml=budapest
+22	gån	gån	VERB	_	VerbForm=Inf	18	parataxis	_	SpaceAfter=No|lemma_gml=gân
+23	.	.	PUNCT	_	_	22	punct	_	_
+

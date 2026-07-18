@@ -1,0 +1,20 @@
+# sent_id = LSDC_0179_DWF_1931_OWL_ravensberg_heinrich-stolte_ravensberg_der-bauernhof-um-1870
+# text_orig = Dat Fack es smaller, owwer doe Stänner un Balken send nich swäcker os annerwiagen.
+# text = Dat vak is smaller, aver de ständer un balken sint nich swäkker as anderweagen.
+1	Dat	de	DET	_	Case=Nom|Definite=Def|Gender=Neut|Number=Sing|PronType=Art	2	det	_	lemma_gml=dê
+2	vak	vak	NOUN	_	Case=Nom|Gender=Neut|Number=Sing	3	nsubj	_	lemma_gml=vak
+3	is	weasen	AUX	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres	0	cop	_	lemma_gml=wēsen
+4	smaller	smal	ADJ	_	Degree=Cmp	3	root	_	SpaceAfter=No|lemma_gml=smal
+5	,	,	PUNCT	_	_	4	punct	_	_
+6	aver	aver	CCONJ	_	_	3	cc	_	lemma_gml=āver
+7	de	de	DET	_	Case=Nom|Definite=Def|Gender=Masc|Number=Plur|PronType=Art	8	det	_	lemma_gml=dê
+8	ständer	ständer	NOUN	_	Case=Nom|Gender=Masc|Number=Plur	11	nsubj	_	lemma_gml=stender
+9	un	un	CCONJ	_	_	8	cc	_	lemma_gml=unde
+10	balken	balken	NOUN	_	Case=Nom|Gender=Masc|Number=Plur	9	conj	_	lemma_gml=balke
+11	sint	weasen	AUX	_	Mood=Ind|Number=Plur|Person=3|Tense=Pres	6	cop	_	lemma_gml=wēsen
+12	nich	nich	PART	_	PartType=Neg	13	advmod	_	lemma_gml=nicht
+13	swäkker	swak	ADJ	_	Degree=Cmp	11	conj	_	lemma_gml=swak
+14	as	as	ADP	_	_	13	case	_	lemma_gml=alsô
+15	anderweagen	anderweagen	ADV	_	_	14	obl	_	SpaceAfter=No|lemma_gml=anderwech
+16	.	.	PUNCT	_	_	3	punct	_	_
+

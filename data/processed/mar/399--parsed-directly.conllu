@@ -1,0 +1,13 @@
+# sent_id = 399
+# text = आज सकाळी ती शेवटची बाचाबाची झाली.
+# translit = āja sakāḷī tī śevaṭacī bācābācī jhālī.
+1	आज	आज	ADV	_	_	7	advmod	_	Translit=āja|LTranslit=āja
+2	सकाळी	सकाळी	ADV	_	_	7	advmod	_	Translit=sakāḷī|LTranslit=sakāḷī
+3	ती	तो	DET	_	Deixis=Remt|Gender=Fem|Number=Sing|PronType=Dem	6	det	_	Translit=tī|LTranslit=to
+4-5	शेवटची	_	_	_	_	_	_	_	Translit=śevaṭacī
+4	शेवट	शेवट	NOUN	_	Case=Abs|Gender=Masc|Number=Sing	6	nmod:poss	_	Translit=śevaṭa|LTranslit=śevaṭa
+5	ची	चा	ADP	_	Gender=Fem|Number=Sing	4	case	_	Translit=cī|LTranslit=cā
+6	बाचाबाची	बाचाबाची	NOUN	_	Case=Nom|Gender=Fem|Number=Sing	7	nsubj	_	Translit=bācābācī|LTranslit=bācābācī
+7	झाली	होणे	VERB	_	Aspect=Perf|Gender=Fem|Number=Sing|Person=3|VerbForm=Fin	0	root	_	LTranslit=hoṇe|SpaceAfter=No|Translit=jhālī
+8	.	.	PUNCT	_	_	7	punct	_	Translit=.|LTranslit=.
+

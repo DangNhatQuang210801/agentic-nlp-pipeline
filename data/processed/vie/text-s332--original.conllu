@@ -1,0 +1,26 @@
+# sent_id = text-s332
+# text =Vợ , con và ông bà , các anh các chị nhà vợ đã khổ sở vì mấy đứa con nhà mình lắm rồi .
+1	Vợ	vợ	NOUN	N	_	14	nsubj	_	_
+2	,	,	PUNCT	,	_	3	punct	_	_
+3	con	con	NOUN	N	_	1	conj	_	_
+4	và	và	CCONJ	CC	_	5	cc	_	_
+5	ông bà	ông bà	NOUN	N	_	1	conj	_	_
+6	,	,	PUNCT	,	_	8	punct	_	_
+7	các	các	DET	Det	_	8	det	_	_
+8	anh	anh	NOUN	N	_	1	conj	_	_
+9	các	các	DET	Det	_	10	det	_	_
+10	chị	chị	NOUN	N	_	8	conj	_	_
+11	nhà	nhà	NOUN	N	_	8	nmod:poss	_	_
+12	vợ	vợ	NOUN	N	_	11	nmod	_	_
+13	đã	đã	ADV	Adv	_	14	advmod	_	_
+14	khổ sở	khổ sở	ADJ	Adj	_	0	root	_	_
+15	vì	vì	ADP	Pre	_	18	case	_	_
+16	mấy	mấy	DET	Det	_	18	det	_	_
+17	đứa	đứa	NOUN	Nc	_	18	clf	_	_
+18	con	con	NOUN	N	_	14	obl	_	_
+19	nhà	nhà	NOUN	N	_	18	nmod	_	_
+20	mình	mình	PRON	Pro	_	19	compound:pron	_	_
+21	lắm	lắm	ADV	Adv	_	14	advmod	_	_
+22	rồi	rồi	ADV	Adv	_	14	advmod	_	_
+23	.	.	PUNCT	.	_	14	punct	_	_
+

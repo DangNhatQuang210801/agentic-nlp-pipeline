@@ -1,0 +1,34 @@
+# sent_id = LSDC_0032_DNS_1882_OFR_oustfreesland_bater_is_bater
+# text_orig = He namm sien Piep, kloppde hum uut, stook hum bedachteg an, leep noch 'n paar Maal schmökend over de Dähl, un dann - sedde he sück.
+# text = Hee nam syn pype, kloppede hum uut, stouk hum bedachtig an, leyp noch en pår mål smöykend oaver de deale, un dan sette hee sik.
+1	Hee	hee	PRON	_	Case=Nom|Gender=Masc|Number=Plur|Person=3|PronType=Prs	2	nsubj	_	lemma_gml=hê¹
+2	nam	neamen	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	0	root	_	lemma_gml=nēmen
+3	syn	syn	DET	_	Case=Acc|Gender=Masc|Gender[psor]=Masc|Number=Sing|Number[psor]=Sing|Person[psor]=3|Poss=Yes|PronType=Prs	4	det:poss	_	lemma_gml=sîn⁴
+4	pype	pype	NOUN	_	Case=Acc|Gender=Masc|Number=Sing	2	obj	_	SpaceAfter=No|lemma_gml=pîpe
+5	,	,	PUNCT	_	_	6	punct	_	_
+6	kloppede	kloppen	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	2	conj	_	lemma_gml=kloppen
+7	hum	hee	PRON	_	Case=Acc|Gender=Masc|Person=3|PronType=Prs	6	obj	_	lemma_gml=hê¹
+8	uut	uut	ADP	_	_	6	compound:prt	_	SpaceAfter=No|lemma_gml=ût¹
+9	,	,	PUNCT	_	_	10	punct	_	_
+10	stouk	steaken	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	2	conj	_	lemma_gml=stēken
+11	hum	hee	PRON	_	Case=Acc|Gender=Masc|Person=3|PronType=Prs	10	obj	_	lemma_gml=hê¹
+12	bedachtig	bedächtig	ADJ	_	Degree=Pos	10	advmod	_	lemma_gml=bedechtich
+13	an	an	ADP	_	_	10	compound:prt	_	SpaceAfter=No|lemma_gml=an
+14	,	,	PUNCT	_	_	15	punct	_	_
+15	leyp	loupen	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	2	conj	_	lemma_gml=lôpen¹
+16	noch	noch	ADV	_	_	15	advmod	_	lemma_gml=noch²
+17	en	en	DET	_	Definite=Ind|Gender=Neut|Number=Sing	18	det	_	lemma_gml=êⁱn¹
+18	pår	pår	NOUN	_	Gender=Neut|Number=Sing	19	nmod	_	lemma_gml=pâr
+19	mål	mål	NOUN	_	Gender=Neut	15	obl	_	lemma_gml=mâl¹
+20	smöykend	smöykend	ADJ	_	Degree=Pos	15	advmod	_	lemma_gml=smö̂ken²
+21	oaver	öäver	ADP	_	AdpType=Prep	23	case	_	lemma_gml=ȫver¹
+22	de	de	DET	_	Case=Acc|Definite=Def|Gender=Fem|Number=Sing|PronType=Art	23	det	_	lemma_gml=dê¹
+23	deale	deale	NOUN	_	Case=Acc|Gender=Fem|Number=Sing	20	obl	_	SpaceAfter=No|lemma_gml=dēle⁴
+24	,	,	PUNCT	_	_	27	punct	_	_
+25	un	un	CCONJ	_	_	27	cc	_	lemma_gml=unde²
+26	dan	dan	ADV	_	_	27	advmod	_	lemma_gml=dan¹
+27	sette	setten	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	2	conj	_	lemma_gml=setten
+28	hee	hee	PRON	_	Case=Nom|Gender=Masc|Number=Plur|Person=3|PronType=Prs	27	nsubj	_	lemma_gml=hê¹
+29	sik	sik	PRON	_	Case=Acc,Dat|Person=3|PronType=Prs|Reflex=Yes	27	expl:pv	_	SpaceAfter=No|lemma_gml=sik¹
+30	.	.	PUNCT	_	_	2	punct	_	_
+
