@@ -43,11 +43,7 @@ def main():
 
         # dir.name corresponds to ISO-3 language code
         treebanks[dir.name] = CoNLL.conll2doc(train_set_paths[0])
-    print(f"treebanks keys: {list(treebanks.keys())}")
-    
-    for tb in treebanks:
-        print(tb)
-    
+            
 
     # Register tools
     agent.register_tool(*BagOfWordsRetrievalTool(treebanks).as_agent_tool())
