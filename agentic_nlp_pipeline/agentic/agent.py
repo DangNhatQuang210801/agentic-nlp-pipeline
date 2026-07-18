@@ -1,8 +1,10 @@
+"""Class for the dependency parsing agent."""
+
 import ast
-from datetime import datetime
 import json
+from datetime import datetime
 from pathlib import Path
-from typing import Callable, Any
+from typing import Any, Callable
 
 import regex as re
 from stanza.models.common.doc import Sentence
@@ -51,6 +53,8 @@ class DepParseAgent:
             log_dir: Optional Path to a logging directory.
             log_file_name: Optional name for the log file.
         """
+
+        # Construct initial messages
         sent_text = sent.text
         sent_words = [{"id": w.id, "form": w.text} for w in sent.words]
         sent_words_str = re.sub(r"'", '"', str(sent_words))
@@ -61,18 +65,22 @@ class DepParseAgent:
             {"role": "user", "content": content},
         ]
 
+        # Print initial messages
         for msg in messages:
             self._print_msg(msg)
 
+        # Run agent loop
         for _ in range(self.max_iters_per_call):
             messages = self._run_iteration(messages)
             self._update_stats(messages)
             if messages[-1]["role"] != "tool":
                 break
 
+        # Log the conversation and compute stats
         self._log_run(messages, log_dir, log_file_name)
         self._update_stats(messages)
 
+        # Parse the final output and update the setnence accordingly
         tree = self._parse_dep_tree(messages[-1]["content"])
         for word, edge in zip(sent.words, tree):
             word.head = edge["head"]
@@ -147,11 +155,12 @@ class DepParseAgent:
             # If value is not a string, return
             if not isinstance(value, str):
                 return value
-            # Otherwise try to parse it one way or the other
+            # Otherwise try to parse as JSON
             try:
                 return json.loads(value)
             except json.JSONDecodeError:
                 pass
+            # Otherwise try to parse as Python literal
             try:
                 return ast.literal_eval(value)
             except (ValueError, SyntaxError):
@@ -167,14 +176,14 @@ class DepParseAgent:
         tool_call_matches = re.findall(TOOL_CALL_PATTERN, response)
         tool_calls = []
         for raw_tc in tool_call_matches:
-            # Parse JSON
+            # Try to parse as JSON
             try:
                 tool_calls.append(json.loads(raw_tc))
                 continue
             except json.JSONDecodeError:
                 pass
 
-            # Parse fake XML
+            # Try to parse as fake-XML
             try:
                 name = re.findall(FUNCTION_NAME_PATTERN, raw_tc)[0]
                 body = re.findall(FUNCTION_BODY_PATTERN, raw_tc)[0]
@@ -206,10 +215,13 @@ class DepParseAgent:
         Returns:
             The dependency tree parsed as a list of dicts.
         """
+
+        # Try to parse as json directly
         try:
             return json.loads(response)
         except json.JSONDecodeError:
             pass
+        # Otherwise find the last match for [{...}]
         try:
             tree = re.findall(r"(\[{.+?}\])", response)[-1]
             return json.loads(tree)

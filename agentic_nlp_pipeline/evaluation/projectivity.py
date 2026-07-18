@@ -1,4 +1,4 @@
-from stanza.models.common.doc import Sentence, Document
+from stanza.models.common.doc import Document, Sentence
 
 
 def is_projective(sent: Sentence) -> bool:
