@@ -24,7 +24,7 @@ class Experiment:
         self.agent = agent
         self.data_root = data_root
         self.new_suffix = new_suffix
-        self.log_sufix = log_suffix
+        self.log_suffix = log_suffix
 
     def run(self):
         for sent_path in utils.get_unparsed_sentences(
@@ -36,7 +36,7 @@ class Experiment:
             self.agent.dep_parse(
                 sent=sent,
                 log_dir=sent_path.parent,
-                log_file_name=str(sent_path).removesuffix(UNPARSED) + self.log_sufix,
+                log_file_name=str(sent_path).removesuffix(UNPARSED) + self.log_suffix,
             )
 
             # Write parsed sentence to disk
