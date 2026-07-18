@@ -1,3 +1,5 @@
+"""Morphological lookup from annotated training treebanks."""
+
 from collections import Counter
 from pathlib import Path
 
@@ -8,7 +10,11 @@ from .utils import tool_error, tool_json
 
 
 class StatisticalMorphologyLookupTool:
-    """Look up token analyses observed in multilingual CoNLL-U training data."""
+    """Return analyses observed for surface forms in each language.
+
+    ``lookup`` accepts token dictionaries and returns frequency-ranked lemma,
+    UPOS, and FEATS candidates as JSON.
+    """
 
     schema = {
         "type": "function",

@@ -15,7 +15,11 @@ from .utils import (
 
 
 class KNNRetrievalTool:
-    """Brute-force train-treebank retrieval by FORM and UPOS n-gram overlap."""
+    """Retrieve annotated sentences by FORM and UPOS n-gram overlap.
+
+    Documents are stored by language. ``search`` accepts token dictionaries
+    and returns JSON examples with complete CoNLL-U annotations.
+    """
 
     schema = {
         "type": "function",

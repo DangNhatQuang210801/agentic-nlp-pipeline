@@ -1,3 +1,5 @@
+"""Dependency tree validation exposed through the shared tool protocol."""
+
 from typing import Callable
 
 from .utils import token_dicts_to_sentence
@@ -5,12 +7,15 @@ from ..validation import validate_sentence
 
 
 class TreeValidationTool:
+    """Validate token heads and return a concise structural assessment."""
+
     schema = {
         "type": "function",
         "function": {
             "name": "validate_dependency_tree",
             "description": (
-                "Check whether the sentence's dependency tree adhears to a number of formal constraints. This is something to be checked befor submitting a final answer."
+                "Check whether a dependency tree adheres to formal constraints "
+                "before submitting a final answer."
             ),
             "parameters": {
                 "type": "object",

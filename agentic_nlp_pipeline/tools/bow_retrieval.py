@@ -28,7 +28,11 @@ def _score(query: Sentence, candidate: Sentence) -> float:
 
 
 class BagOfWordsRetrievalTool:
-    """Retrieve sentences by word overlap and sentence length."""
+    """Retrieve annotated sentences by word overlap and sentence length.
+
+    Documents are stored by language. ``search`` accepts token dictionaries
+    and returns JSON examples with complete CoNLL-U annotations.
+    """
 
     schema = {
         "type": "function",
