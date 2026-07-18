@@ -99,9 +99,9 @@ UD_Taiwanese-Ckiplab original data doesn't have train, dev, test, so I:
 """
 
 
-path = Path("data/external/nan/UD_Taiwanese-Ckiplab/data/external/nan/UD_Taiwanese-Ckiplab/")
+path = Path("data/external/nan/UD_Taiwanese-Ckiplab/")
 
-input_file = Path(path + "sinica_ud_converted.conllu")
+input_file = Path(path,"sinica_ud_converted.conllu")
 
 
 if input_file.exists():
@@ -110,7 +110,7 @@ if input_file.exists():
 
     if len(sentences) > 1:
         twsns_train, twsns_test = train_test_split(
-            sentences, test_size=0.2, random_state=42
+            sentences, test_size=0.2, random_state=42 # 20% test, 80% train
         )
 
         train_file = input_file.with_name(f"{input_file.stem}-train.conllu")
