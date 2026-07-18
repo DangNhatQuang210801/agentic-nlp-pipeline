@@ -3,10 +3,10 @@ from datetime import datetime
 import json
 from pathlib import Path
 from typing import Callable, Any
+from urllib import response
 
 import regex as re
 from stanza.models.common.doc import Sentence
-
 from ..models import LanguageModel
 
 
@@ -101,6 +101,13 @@ class DepParseAgent:
 
         # Parse tool calls
         tool_calls = self._parse_tool_calls(response)
+        # added:
+
+        print("\n===== RAW MODEL OUTPUT =====")
+        print(response)
+        print("============================")
+
+
         if not tool_calls:
             return [*messages, *new_messages]
 
@@ -143,19 +150,24 @@ class DepParseAgent:
             a `name` and an `arguments` entry.
         """
 
-        def _parse_arg(value: Any):
+        def _parse_arg(value: Any, _depth: int = 0):
             # If value is not a string, return
-            if not isinstance(value, str):
+            if not isinstance(value, str) or _depth > 3:
                 return value
             # Otherwise try to parse it one way or the other
             try:
-                return json.loads(value)
+                parsed = json.loads(value)
             except json.JSONDecodeError:
-                pass
-            try:
-                return ast.literal_eval(value)
-            except (ValueError, SyntaxError):
-                return value
+                try:
+                    parsed = ast.literal_eval(value)
+                except (ValueError, SyntaxError):
+                    return value
+            # If we only unwrapped one layer of quoting and still have a string
+            # that looks like JSON/Python literal, try again.
+            if isinstance(parsed, str) and parsed != value:
+                return _parse_arg(parsed, _depth + 1)
+            return parsed        
+        
 
         TOOL_CALL_PATTERN = re.compile(r"<tool_call>\s*(.*?)\s*</tool_call>", re.DOTALL)
         FUNCTION_NAME_PATTERN = re.compile(r"<function=(.*?)>")
