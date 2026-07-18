@@ -1,0 +1,10 @@
+# sent_id = 397
+# text = केशवचंद्रांना ते सहन होत नव्हते.
+# translit = keśavacaṁdrāṁnā te sahana hota navhate.
+1	केशवचंद्रांना	केशवचंद्र	PROPN	_	Case=Dat|Gender=Masc|Number=Plur	5	nsubj	_	Translit=keśavacaṁdrāṁnā|LTranslit=keśavacaṁdra
+2	ते	तो	PRON	_	Case=Acc|Deixis=Remt|Gender=Neut|Number=Sing|Person=3|PronType=Dem	3	obj	_	Translit=te|LTranslit=to
+3	सहन	सहन	ADV	_	_	5	compound:lvc	_	Translit=sahana|LTranslit=sahana
+4	होत	होणे	VERB	_	Aspect=Imp|VerbForm=Part	5	root	_	Translit=hota|LTranslit=hoṇe
+5	नव्हते	असणे	AUX	_	Gender=Neut|Number=Sing|Person=3|Polarity=Neg|Tense=Past|VerbForm=Fin	0	aux	_	LTranslit=asaṇe|SpaceAfter=No|Translit=navhate
+6	.	.	PUNCT	_	_	5	punct	_	Translit=.|LTranslit=.
+

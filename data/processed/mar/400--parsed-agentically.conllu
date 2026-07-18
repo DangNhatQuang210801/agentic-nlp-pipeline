@@ -1,0 +1,10 @@
+# sent_id = 400
+# text = सावकार का ही जमीन लाटणार?
+# translit = sāvakāra kā hī jamīna lāṭaṇāra?
+1	सावकार	सावकार	NOUN	_	Case=Nom|Gender=Masc|Number=Sing	4	nsubj	_	Translit=sāvakāra|LTranslit=sāvakāra
+2	का	का	ADV	_	_	1	advmod	_	Translit=kā|LTranslit=kā
+3	ही	हा	DET	_	Deixis=Prox|Gender=Fem|Number=Sing|PronType=Dem	4	det	_	Translit=hī|LTranslit=hā
+4	जमीन	जमीन	NOUN	_	Case=Acc|Gender=Fem|Number=Sing	5	obj	_	Translit=jamīna|LTranslit=jamīna
+5	लाटणार	लाटणे	VERB	_	Aspect=Prosp|VerbForm=Fin	0	root	_	LTranslit=lāṭaṇe|SpaceAfter=No|Translit=lāṭaṇāra
+6	?	?	PUNCT	_	_	5	punct	_	Translit=?|LTranslit=?
+
