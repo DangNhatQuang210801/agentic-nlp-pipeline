@@ -47,7 +47,6 @@ def main():
     
     for tb in treebanks:
         print(tb)
-    return
     
 
     # Register tools
