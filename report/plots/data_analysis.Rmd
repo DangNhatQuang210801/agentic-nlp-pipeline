@@ -30,6 +30,7 @@ summary(parse)
 str(parse)
 ```
 
+## Parsing Success Rate by Language and Tool Use
 
 ```{r}
 parse_summary <- parse %>%
@@ -48,11 +49,84 @@ ggplot(parse_summary, aes(x = language, y = pct_success, fill = language)) +
   labs(
     x = "Language",
     y = "Successfully Parsed",
-    title = "Parsing Success by Language and Tool Use"
+    title = "Parsing Success Rate by Language and Tool Use"
   ) +
+  theme_bw() +
   theme(legend.position = "none")
-  theme_bw()
 ```
+
+
+## UAS by Language and Tool Use
+
+```{r}
+ggplot(parse, aes(x = language, y = uas, fill = language)) +
+  geom_boxplot() +
+  facet_wrap(
+    ~ with_tools,
+    labeller = as_labeller(c(
+      "TRUE" = "With Tools",
+      "FALSE" = "Without Tools"
+    ))
+  ) +
+  labs(x = "Language", y = "UAS", title = "Overall UAS by Language and Tool Use") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+
+## Differences
+
+```{r}
+uas_diff <- parse %>%
+  select(sent_id, language, with_tools, uas) %>%
+  pivot_wider(names_from = with_tools, values_from = uas, names_prefix = "tools_") %>%
+  mutate(uas_diff = tools_TRUE - tools_FALSE)
+
+ggplot(uas_diff, aes(x = language, y = uas_diff, fill = language)) +
+  geom_boxplot() +
+  labs(x = "Language", y = "UAS difference", title = "Difference in per-sentence UAS by Language") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+## Number of tools used
+
+```{r}
+without_tools_only <-
+  parse %>%
+  filter(with_tools == FALSE)
+with_tools_only <-
+  parse %>%
+  filter(with_tools == TRUE)
+
+ggplot(with_tools_only, aes(x = n_tool_calls, y = uas)) +
+  geom_point() +
+  labs(x = "Language", y = "UAS difference", title = "Difference in per-sentence UAS by Language") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+## UAS by sentence length
+
+
+
+```{r}
+model <- lm(uas ~ language + with_tools + n_words, data = parse)
+model <- lm(uas ~ n_tool_calls, data = with_tools_only)
+summary(model)
+```
+
+
+```{r}
+mean(without_tools_only$uas)
+```
+```{r}
+mean(with_tools_only$uas)
+```
+
+
+
+
 
 
 
