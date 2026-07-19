@@ -58,7 +58,10 @@ def compile_df(
             matching_log_path = logs_dict[name]
 
             gold_sent = CoNLL.conll2doc(matching_unparsed_path).sentences[0]
-            pred_sent = CoNLL.conll2doc(parsed_path).sentences[0]
+            try:
+                pred_sent = CoNLL.conll2doc(parsed_path).sentences[0]
+            except IndexError:
+                pred_sent = _parse_sent_manually(parsed_path)
             message_log = json.load(open(matching_log_path, "r"))
 
             n_words = len(pred_sent.words)
@@ -97,6 +100,29 @@ def compile_df(
             )
 
     return pd.DataFrame(data)
+
+
+def _parse_sent_manually(path: Path) -> Sentence:
+    with open(path, "r") as f:
+        raw = f.read()
+
+    tokens = []
+    sent_id = ""
+    sent_id_prefix = "# sent_id = "
+    for line in raw.split("\n"):
+        if not line or line[0] == "#":
+            if "sent_id" in line:
+                sent_id = line.removeprefix(sent_id_prefix)
+            continue
+        id, form, _, _, _, _, head, _, _, _ = line.split("\t")
+        tokens.append({"id": int(id), "text": form, "head": int(head)})
+
+    # Construct sentence
+    sent = Sentence(tokens)
+    sent.sent_id = sent_id
+    sent.add_comment(sent_id_prefix + sent_id)
+
+    return sent
 
 
 def _create_path_dict(paths: list[Path], suffix: str) -> dict[str, Path]:
