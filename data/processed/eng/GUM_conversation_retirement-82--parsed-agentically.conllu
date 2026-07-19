@@ -1,0 +1,25 @@
+# newpar
+# newpar_block = sp who:::"#Doris" whom:::"#Sam" (1 s)
+# sent_id = GUM_conversation_retirement-82
+# s_type = decl
+# s_prominence = 4
+# transition = retain
+# speaker = Doris
+# addressee = Sam
+# text = I think you – I think you gave him some herb of some kind.
+1	I	I	PRON	PRP	Case=Nom|Number=Sing|Person=1|PronType=Prs	2	nsubj	2:nsubj	Discourse=attribution-positive:134->135:0:sem-atsrc-708-_+lex-indwd-709-_|Entity=(6-person-giv:inact-nnnnn-cf1-1-ana)|XML=<sic>
+2	think	think	VERB	VBP	Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin	3	reparandum	6:reparandum	_
+3	you	you	PRON	PRP	Case=Acc|Number=Sing|Person=2|PronType=Prs	0	ccomp	2:ccomp	Discourse=organization-phatic:135->137:1:syn-intrp-711-_|Entity=(48-person-giv:act-nnnnn-cf2*-1-ana)
+4	–	-	PUNCT	:	_	3	punct	2:punct	XML=</sic>
+5	I	I	PRON	PRP	Case=Nom|Number=Sing|Person=1|PronType=Prs	2	nsubj	6:nsubj	Discourse=attribution-positive:136->137:0:sem-atsrc-712-_+lex-indwd-713-_|Entity=(6-person-giv:act-nnnnn-cf1-1-ana)
+6	think	think	VERB	VBP	Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin	5	root	0:root	_
+7	you	you	PRON	PRP	Case=Nom|Number=Sing|Person=2|PronType=Prs	6	nsubj	8:nsubj	Discourse=restatement-repetition_m:137->131:1:ref-prs-687,710-_+ref-prs-687,714-_+sem-lxchn-688,715-_+ref-prs-689,716-_+sem-synym-690-693,717-721-_+sem-lxchn-693,718-_|Entity=(48-person-giv:act-nnnnn-cf2*-1-ana)
+8	gave	give	VERB	VBD	Mood=Ind|Number=Sing|Person=2|Tense=Past|VerbForm=Fin	7	ccomp	6:ccomp	Cxn=Ditransitive|CxnElt=8:Ditransitive.V
+9	him	he	PRON	PRP	Case=Acc|Gender=Masc|Number=Sing|Person=3|PronType=Prs	8	iobj	8:iobj	CxnElt=8:Ditransitive.Rec|Entity=(59-person-giv:act-nnnnn-cf3-1-ana)
+10	some	some	DET	DT	PronType=Ind	11	det	11:det	Entity=(58-plant-giv:inact-sssss-cf4-2-coref
+11	herb	herb	NOUN	NN	Number=Sing	0	obj	8:obj	CxnElt=8:Ditransitive.Theme
+12	of	of	ADP	IN	_	11	case	14:case	_
+13	some	some	DET	DT	PronType=Ind	14	det	14:det	_
+14	kind	kind	NOUN	NN	Number=Sing	11	nmod	11:nmod:of	Entity=58)|SpaceAfter=No
+15	.	.	PUNCT	.	_	14	punct	6:punct	_
+

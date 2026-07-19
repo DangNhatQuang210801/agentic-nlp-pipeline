@@ -1,0 +1,22 @@
+# sent_id = GUM_textbook_chemistry-48
+# s_type = decl
+# s_prominence = 3
+# transition = null
+# text = If the spheres touch, they are part of a single unit of a compound.
+1	If	if	SCONJ	IN	_	4	mark	4:mark	Discourse=contingency-condition:114->115:0:dm-if-878-_|PDTB=Explicit:Contingency.Condition.Arg2-as-cond:if:878:883-893:879-882
+2	the	the	DET	DT	Definite=Def|PronType=Art	3	det	3:det	Entity=(159-object-acc:aggr-nnnnn-cf1-2-coref|SplitAnte=153<159,156<159
+3	spheres	sphere	NOUN	NNS	Number=Plur	4	nsubj	4:nsubj	Entity=159)|MSeg=sphere-s
+4	touch	touch	VERB	VBP	Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin	0	advcl	8:advcl:if	CxnElt=8:Conditional-UnspecifiedEpistemic-NoInversion.Protasis|SpaceAfter=No
+5	,	,	PUNCT	,	_	4	punct	4:punct	_
+6	they	they	PRON	PRP	Case=Nom|Number=Plur|Person=3|PronType=Prs	7	nsubj	8:nsubj	Discourse=context-background:115->116:3:_|Entity=(159-object-giv:act-nnnnn-cf1-1-ana)
+7	are	be	AUX	VBP	Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin	8	cop	8:cop	_
+8	part	part	NOUN	NN	Number=Sing	0	root	0:root	Cxn=Conditional-UnspecifiedEpistemic-NoInversion|CxnElt=8:Conditional-UnspecifiedEpistemic-NoInversion.Apodosis
+9	of	of	ADP	IN	_	10	case	12:case	_
+10	a	a	DET	DT	Definite=Ind|PronType=Art	12	det	12:det	Entity=(160-object-new-nnnnn-cf2-3-sgl
+11	single	single	ADJ	JJ	Degree=Pos	12	amod	12:amod	_
+12	unit	unit	NOUN	NN	Number=Sing	0	nmod	8:nmod:of	_
+13	of	of	ADP	IN	_	15	case	15:case	_
+14	a	a	DET	DT	Definite=Ind|PronType=Art	15	det	15:det	Entity=(161-substance-new-nnnnn-cf3-2-sgl
+15	compound	compound	NOUN	NN	Number=Sing	8	nmod	12:nmod:of	Entity=161)160)|SpaceAfter=No
+16	.	.	PUNCT	.	_	8	punct	8:punct	_
+

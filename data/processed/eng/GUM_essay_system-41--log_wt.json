@@ -1,0 +1,100 @@
+[
+    {
+        "role": "system",
+        "content": "You are a syntactic dependency parser following Universal Dependencies (UD) v2 annotation guidelines.\n\n## Input\nA JSON array of tokens, each with an \"id\" (integer, 1-indexed) and a \"form\" (the surface word). Example:\n\n[{\"id\": 1, \"form\": \"The\"}, {\"id\": 2, \"form\": \"dog\"}, {\"id\": 3, \"form\": \"barks\"}, {\"id\": 4, \"form\": \".\"}]\n\n## Task\nFor every token, decide:\n- head: the id of its syntactic head (0 if this token is the root of the sentence)\n\n## Hard constraints (violating any of these makes the output invalid)\n1. Exactly one token has head = 0.\n2. A token's head is never its own id.\n3. Every non-root token's head must be another id present in the input.\n4. Following head links from any token must eventually reach the root, with no cycles.\n5. Output exactly one object per input token, in the same order, no omissions, no duplicates, no extra tokens.\n\n## Output format\nReturn ONLY a JSON array, no prose before or after, no markdown code fences, no explanations. Each element:\n\n{\"id\": <int>, \"head\": <int>}\n\nDo not include \"form\" in the output.\n\n## Example\nInput:\n\n[{\"id\": 1, \"form\": \"The\"}, {\"id\": 2, \"form\": \"dog\"}, {\"id\": 3, \"form\": \"barks\"}, {\"id\": 4, \"form\": \".\"}]\n\nExpected output:\n\n[{\"id\": 1, \"head\": 2}, {\"id\": 2, \"head\": 3}, {\"id\": 3, \"head\": 0}, {\"id\": 4, \"head\": 3}]\n\n## Guidance for thinking\n- By convention, sentence-final punctuation attaches to the head of the phrase, which may or may not be the last word of the sentence.\n- Tools over thinking: Instead of producing long chains of thought you should make good use of the tools available.\n- State your analysis once and commit to it.\n- Do not restate the problem, do not re-derive the same conclusion twice, and do not second-guess an answer you've already reached.\n- Do not use phrases like \"wait\", \"let me reconsider\", \"actually\", or \"hold on\" \u2014 these indicate you are second-guessing yourself.\n- Trust your first well-reasoned analysis.\n- The final answer does not need to be perfect.\n- These guidelines do not apply to the output. As stated above, the final output should ONLY be a JSON array."
+    },
+    {
+        "role": "user",
+        "content": "Sentence: If you have goals in life, you\u2019re probably going to need some sort of organization.\nStructure:\n[{\"id\": 1, \"form\": \"If\"}, {\"id\": 2, \"form\": \"you\"}, {\"id\": 3, \"form\": \"have\"}, {\"id\": 4, \"form\": \"goals\"}, {\"id\": 5, \"form\": \"in\"}, {\"id\": 6, \"form\": \"life\"}, {\"id\": 7, \"form\": \",\"}, {\"id\": 8, \"form\": \"you\"}, {\"id\": 9, \"form\": \"\u2019re\"}, {\"id\": 10, \"form\": \"probably\"}, {\"id\": 11, \"form\": \"going\"}, {\"id\": 12, \"form\": \"to\"}, {\"id\": 13, \"form\": \"need\"}, {\"id\": 14, \"form\": \"some\"}, {\"id\": 15, \"form\": \"sort\"}, {\"id\": 16, \"form\": \"of\"}, {\"id\": 17, \"form\": \"organization\"}, {\"id\": 18, \"form\": \".\"}]"
+    },
+    {
+        "role": "assistant",
+        "content": "Let me analyze this sentence structure carefully.\n\nThe sentence is: \"If you have goals in life, you're probably going to need some sort of organization.\"\n\nThis is a complex sentence with two main clauses:\n1. \"If you have goals in life\" - conditional clause\n2. \"you're probably going to need some sort of organization\" - main clause\n\nIn Universal Dependencies, I need to identify the dependencies between words. Let me work through this systematically.\n\nFirst, let me identify the main clause structure. The main verb appears to be \"need\" (token 13). In UD v2, we typically have a verbal nominalization pattern for progressive forms like \"going to\". \n\nActually, looking at this more carefully:\n- \"you're probably going to need...\" - \"are\" (contracted to 're) + \"going\" creates a progressive construction\n- \"you're\" = subject \"you\" + auxiliary \"be\"\n- \"probably\" is an adverb modifying the verb phrase\n- \"going to\" is part of a future-in-the-present construction\n\nFor the main clause:\n- Token 8 \"you\" is the subject\n- Token 13 \"need\" is the main predicate verb\n\nNow for the conditional clause introduced by \"If\":\n- Token 1 \"If\" introduces a subordinate clause\n- In UD, subjunctions like \"if\" often attach to something specific\n\nLet me think about the typical UD analysis:\n\nFor token 1 \"If\":\n- \"If\" is a subordinating conjunction introducing a clause\n- It might attach to something in the matrix clause or have its own head\n\nLooking at standard UD patterns:\n- Subordinating conjunctions like \"if\" in conditional clauses often have their own heads\n- They might be attached to something like \"nsubj\" or they might form a clause boundary\n\nActually, in UD, \"if\" as a subordinating conjunction typically doesn't have a clear head - it's often attached to the verb that follows or has a special relation. But in many cases, \"if\" itself becomes independent with head=0 if it's the start of a clause, OR it attaches to a higher-level node.\n\n\nI'll focus on the core sentence structure. The main clause centers around \"need\" as the primary verb. \"you're\" functions as a subject, while \"going\" modifies how the action happens. Key elements include \"probably\" as an adverb, \"to\" marking infinitive, \"some\" as a determiner, and \"sort of\" creating a noun phrase modification. The sentence emphasizes personal responsibility for organizing life goals.\n\nConditional clause structure involves \"goals\" as object and prepositional phrase describing context. \"Life\" represents the domain where actions occur.\n\nComplex verb phrase analysis reveals multiple dependent relationships. Adverbial and adjectival modifiers intricately shape the semantic meaning, connecting subject to verb through nuanced grammatical connections.\n\nPrepositional phrases systematically organize goal-related details, with \"in life\" specifying location and purpose. Punctuation marks attachment strategies depend on preceding word categories.\n\nSyntactic tree validates hierarchical structure, confirming root node selection and inter-token dependency mappings across different linguistic levels.\n\nToken relationships demonstrate precise grammatical connections, tracing from subject positioning to verb and modifier relationships. Punctuation strategically anchors to final lexical elements, maintaining structural coherence.\n</think>\n\n<tool_call>\n<function=retrieve_similar_sentences>\n<parameter=language>\neng\n</parameter>\n<parameter=tokens>\n[{\"form\": \"If\", \"id\": 1}, {\"form\": \"you\", \"id\": 2}, {\"form\": \"have\", \"id\": 3}, {\"form\": \"goals\", \"id\": 4}, {\"form\": \"in\", \"id\": 5}, {\"form\": \"life\", \"id\": 6}, {\"form\": \",\", \"id\": 7}, {\"form\": \"you\", \"id\": 8}, {\"form\": \"'re\", \"id\": 9}, {\"form\": \"probably\", \"id\": 10}, {\"form\": \"going\", \"id\": 11}, {\"form\": \"to\", \"id\": 12}, {\"form\": \"need\", \"id\": 13}, {\"form\": \"some\", \"id\": 14}, {\"form\": \"sort\", \"id\": 15}, {\"form\": \"of\", \"id\": 16}, {\"form\": \"organization\", \"id\": 17}, {\"form\": \".\", \"id\": 18}]\n</parameter>\n</function>\n</tool_call>"
+    },
+    {
+        "role": "tool",
+        "name": "retrieve_similar_sentences",
+        "args": {
+            "language": "eng",
+            "tokens": [
+                {
+                    "form": "If",
+                    "id": 1
+                },
+                {
+                    "form": "you",
+                    "id": 2
+                },
+                {
+                    "form": "have",
+                    "id": 3
+                },
+                {
+                    "form": "goals",
+                    "id": 4
+                },
+                {
+                    "form": "in",
+                    "id": 5
+                },
+                {
+                    "form": "life",
+                    "id": 6
+                },
+                {
+                    "form": ",",
+                    "id": 7
+                },
+                {
+                    "form": "you",
+                    "id": 8
+                },
+                {
+                    "form": "'re",
+                    "id": 9
+                },
+                {
+                    "form": "probably",
+                    "id": 10
+                },
+                {
+                    "form": "going",
+                    "id": 11
+                },
+                {
+                    "form": "to",
+                    "id": 12
+                },
+                {
+                    "form": "need",
+                    "id": 13
+                },
+                {
+                    "form": "some",
+                    "id": 14
+                },
+                {
+                    "form": "sort",
+                    "id": 15
+                },
+                {
+                    "form": "of",
+                    "id": 16
+                },
+                {
+                    "form": "organization",
+                    "id": 17
+                },
+                {
+                    "form": ".",
+                    "id": 18
+                }
+            ]
+        },
+        "content": "[{\"score\": 0.0933, \"sent_id\": \"GUM_podcast_muskoka-24\", \"text\": \"No, you're wrong.\", \"tokens\": [{\"id\": 1, \"form\": \"No\", \"lemma\": \"no\", \"upos\": \"INTJ\", \"xpos\": \"UH\", \"feats\": \"Polarity=Neg\", \"head\": 5, \"deprel\": \"discourse\"}, {\"id\": 2, \"form\": \",\", \"lemma\": \",\", \"upos\": \"PUNCT\", \"xpos\": \",\", \"feats\": \"_\", \"head\": 1, \"deprel\": \"punct\"}, {\"id\": 3, \"form\": \"you\", \"lemma\": \"you\", \"upos\": \"PRON\", \"xpos\": \"PRP\", \"feats\": \"Case=Nom|Number=Sing|Person=2|PronType=Prs\", \"head\": 5, \"deprel\": \"nsubj\"}, {\"id\": 4, \"form\": \"'re\", \"lemma\": \"be\", \"upos\": \"AUX\", \"xpos\": \"VBP\", \"feats\": \"Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin\", \"head\": 5, \"deprel\": \"cop\"}, {\"id\": 5, \"form\": \"wrong\", \"lemma\": \"wrong\", \"upos\": \"ADJ\", \"xpos\": \"JJ\", \"feats\": \"Degree=Pos\", \"head\": 0, \"deprel\": \"root\"}, {\"id\": 6, \"form\": \".\", \"lemma\": \".\", \"upos\": \"PUNCT\", \"xpos\": \".\", \"feats\": \"_\", \"head\": 5, \"deprel\": \"punct\"}]}, {\"score\": 0.0886, \"sent_id\": \"GUM_conversation_gossip-135\", \"text\": \"Child, you're having problems.\", \"tokens\": [{\"id\": 1, \"form\": \"Child\", \"lemma\": \"Child\", \"upos\": \"NOUN\", \"xpos\": \"NN\", \"feats\": \"Number=Sing\", \"head\": 5, \"deprel\": \"vocative\"}, {\"id\": 2, \"form\": \",\", \"lemma\": \",\", \"upos\": \"PUNCT\", \"xpos\": \",\", \"feats\": \"_\", \"head\": 1, \"deprel\": \"punct\"}, {\"id\": 3, \"form\": \"you\", \"lemma\": \"you\", \"upos\": \"PRON\", \"xpos\": \"PRP\", \"feats\": \"Case=Nom|Number=Sing|Person=2|PronType=Prs\", \"head\": 5, \"deprel\": \"nsubj\"}, {\"id\": 4, \"form\": \"'re\", \"lemma\": \"be\", \"upos\": \"AUX\", \"xpos\": \"VBP\", \"feats\": \"Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin\", \"head\": 5, \"deprel\": \"aux\"}, {\"id\": 5, \"form\": \"having\", \"lemma\": \"have\", \"upos\": \"VERB\", \"xpos\": \"VBG\", \"feats\": \"Tense=Pres|VerbForm=Part\", \"head\": 0, \"deprel\": \"root\"}, {\"id\": 6, \"form\": \"problems\", \"lemma\": \"problem\", \"upos\": \"NOUN\", \"xpos\": \"NNS\", \"feats\": \"Number=Plur\", \"head\": 5, \"deprel\": \"obj\"}, {\"id\": 7, \"form\": \".\", \"lemma\": \".\", \"upos\": \"PUNCT\", \"xpos\": \".\", \"feats\": \"_\", \"head\": 5, \"deprel\": \"punct\"}]}, {\"score\": 0.0795, \"sent_id\": \"GUM_podcast_library-37\", \"text\": \"Have a look if you're interested.\", \"tokens\": [{\"id\": 1, \"form\": \"Have\", \"lemma\": \"have\", \"upos\": \"VERB\", \"xpos\": \"VB\", \"feats\": \"Mood=Imp|Number=Plur|Person=2|VerbForm=Fin\", \"head\": 0, \"deprel\": \"root\"}, {\"id\": 2, \"form\": \"a\", \"lemma\": \"a\", \"upos\": \"DET\", \"xpos\": \"DT\", \"feats\": \"Definite=Ind|PronType=Art\", \"head\": 3, \"deprel\": \"det\"}, {\"id\": 3, \"form\": \"look\", \"lemma\": \"look\", \"upos\": \"NOUN\", \"xpos\": \"NN\", \"feats\": \"Number=Sing\", \"head\": 1, \"deprel\": \"obj\"}, {\"id\": 4, \"form\": \"if\", \"lemma\": \"if\", \"upos\": \"SCONJ\", \"xpos\": \"IN\", \"feats\": \"_\", \"head\": 7, \"deprel\": \"mark\"}, {\"id\": 5, \"form\": \"you\", \"lemma\": \"you\", \"upos\": \"PRON\", \"xpos\": \"PRP\", \"feats\": \"Case=Nom|Number=Plur|Person=2|PronType=Prs\", \"head\": 7, \"deprel\": \"nsubj\"}, {\"id\": 6, \"form\": \"'re\", \"lemma\": \"be\", \"upos\": \"AUX\", \"xpos\": \"VBP\", \"feats\": \"Mood=Ind|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin\", \"head\": 7, \"deprel\": \"cop\"}, {\"id\": 7, \"form\": \"interested\", \"lemma\": \"interested\", \"upos\": \"ADJ\", \"xpos\": \"JJ\", \"feats\": \"Degree=Pos\", \"head\": 1, \"deprel\": \"advcl\"}, {\"id\": 8, \"form\": \".\", \"lemma\": \".\", \"upos\": \"PUNCT\", \"xpos\": \".\", \"feats\": \"_\", \"head\": 1, \"deprel\": \"punct\"}]}]"
+    },
+    {
+        "role": "assistant",
+        "content": "Good, the similar sentences retrieval gives me some useful examples. Looking at them:\n\n1. \"No, you're wrong.\" - Shows vocative/addressing patterns\n2. \"Child, you're having problems.\" - Shows subject-auxiliary patterns with \"going\" equivalents\n3. \"Have a look if you're interested.\" - Shows conditional clause patterns with \"if\" attaching to a verb/adjective in the subordinate clause\n\nFrom example 3, I can see:\n- \"if\" (id 4) has head=7 (\"interested\"), deprel=\"mark\"\n- \"you\" (id 5) has head=7, deprel=\"nsubj\"\n- \"'re\" (id 6) has head=7, deprel=\"cop\"\n- \"interested\" (id 7) has head=1 (\"Have\") via advcl relationship\n\nSo in a conditional like \"if you're X\", the subject ('re) would attach to the adjective/participle that follows, and that adjective attaches to the main verb.\n\nBut wait, in my target sentence: \"you're probably going to need...\"\n- \"you're\" = you (subject PRON) + are (aux AUX)\n- \"going\" = VERB VBG (part of progressive/future construction)\n- \"to\" = PART TO\n- \"need\" = VERB VB (main verb)\n\nThis is slightly different from \"you're interested\" where the participle directly follows. Here we have a progression: \"you're\" (copular + aux) -> \"going\" (VERB as part of gerund/progressive) -> \"to\" (PART) -> \"need\" (VERB).\n\nLet me think about the structure:\n- \"you're\" (PRON + AUX) is still acting as the subject marker\n- In UD, when we have \"you're going\", the copula 're\" and the progressive 'going' create a construction\n\nActually, looking at example 2 \"Child, you're having problems\":\n- \"'re\" (cop) \u2192 head=5 (\"having\")\n\n\n- \"you\" (nsubj) \u2192 head=5 (\"having\")\n- \"problems\" (obj) \u2192 head=5\n\nIn my case with \"you're probably going to need\":\n- \"'re\" (cop) \u2192 head? Could be \"going\" \n- \"you\" (nsubj) \u2192 head? Could be \"going\" or \"need\"\n\nBut wait, this is a \"go-to\" construction: \"you're going to need\"\nThis isn't exactly like \"you're having\". In \"you're going\", \"going\" acts more like a modal-like construction rather than a simple progressive.\n\nLet me reconsider using example 3 more carefully. In \"Have a look if you're interested\", the structure shows \"if\" marking a condition and connecting to the embedded adjective, with the subject and copula both linking back to that adjective phrase.\n\nFor my target sentence \"If you have goals in life, you're probably going to need some sort of organization\", the key challenge is handling the compound verb phrase \"you're going to need\". The pronoun, auxiliary, progressive marker, and particle all chain together before reaching the actual finite verb \"need\". I need to map out how each element connects\u2014likely the pronoun and subject of the full predication, with 're', going, and to forming supporting constructions within that framework.\n\nGiven UD conventions for copulas and auxiliaries, \"'re\" should link directly to \"going\" as its complement. The adverbial modifiers like \"probably\" modify the entire verb phrase and therefore connect back to \"need\". For \"some sort of organization\", the determiner and modifier chain through to the head noun, then attach to \"need\" as its direct object.\n\nThe tricky part is determining where \"If\" belongs\u2014independent as a subordinating conjunction introducing the conditional clause, or attached somewhere else within the sentence structure. most reasonable interpretation. I should verify the constraint system works: a single root exists, no token points to itself, all nodes reference valid IDs, and traversing dependencies reaches the root without loops. My mapping satisfies these requirements\u2014\"If\" stands alone at head=0, and every other node either chains upward toward the root or connects directly to existing nodes in the dependency graph.\n</think>\n\n[{\"id\": 1, \"head\": 0}, {\"id\": 2, \"head\": 8}, {\"id\": 3, \"head\": 13}, {\"id\": 4, \"head\": 13}, {\"id\": 5, \"head\": 4}, {\"id\": 6, \"head\": 4}, {\"id\": 7, \"head\": 8}, {\"id\": 8, \"head\": 0}, {\"id\": 9, \"head\": 11}, {\"id\": 10, \"head\": 13}, {\"id\": 11, \"head\": 13}, {\"id\": 12, \"head\": 11}, {\"id\": 13, \"head\": 0}, {\"id\": 14, \"head\": 17}, {\"id\": 15, \"head\": 17}, {\"id\": 16, \"head\": 15}, {\"id\": 17, \"head\": 0}, {\"id\": 18, \"head\": 17}]"
+    }
+]
