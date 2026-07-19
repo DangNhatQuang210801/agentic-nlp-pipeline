@@ -6,10 +6,11 @@ import pandas as pd
 import regex as re
 from stanza.models.common.doc import Document, Sentence
 from stanza.utils.conll import CoNLL
+from transformers import AutoTokenizer
 
 from ..experiment.utils import get_paths_by_suffix
-from .projectivity import is_projective
 from ..validation import validate_sentence
+from .projectivity import is_projective
 
 
 def compile_df(
@@ -18,6 +19,7 @@ def compile_df(
     pred_suffix: str,
     log_suffix: str,
     with_tools: bool,
+    tokenizer: AutoTokenizer,
 ) -> pd.DataFrame:
     data = {
         "sent_id": [],
@@ -34,7 +36,10 @@ def compile_df(
         "retrieve_similar_sentences": [],
         "retrieve_similar_sentences_bow": [],
         "validate_dependency_tree": [],
+        "n_generated_tokens": [],
+        "n_tool_result_tokens": [],
     }
+
     for language in ("eng", "nds", "nan", "mar", "vie"):
         data_root = repo_root / "data" / "processed" / language
 
@@ -84,12 +89,27 @@ def compile_df(
             data["validate_dependency_tree"].append(
                 len(re.findall("'validate_dependency_tree'", str(message_log)))
             )
+            data["n_generated_tokens"].append(
+                _get_content_length(message_log, "assistant", tokenizer)
+            )
+            data["n_tool_result_tokens"].append(
+                _get_content_length(message_log, "tool", tokenizer)
+            )
 
     return pd.DataFrame(data)
 
 
 def _create_path_dict(paths: list[Path], suffix: str) -> dict[str, Path]:
     return {str(path).removesuffix(suffix): path for path in paths}
+
+
+def _get_content_length(messages: list[dict], role: str, tokenizer) -> int:
+    acc_content = ""
+    for msg in messages:
+        if msg["role"] == role:
+            acc_content += msg["content"]
+    length = len(tokenizer.encode(acc_content, add_special_tokens=False))
+    return length
 
 
 def _get_n_tool_calls(messages: list[dict]) -> int:

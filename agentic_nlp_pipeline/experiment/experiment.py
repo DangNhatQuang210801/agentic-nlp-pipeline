@@ -9,7 +9,7 @@ UNPARSED = "--original.conllu"
 PARSED_DIRECTLY = "--parsed-directly.conllu"
 PARSED_AGENTICALLY = "--parsed-agentically.conllu"
 LOG_DIRECTLY = "--log.json"
-LOG_AGENTICALLY = "--log-wt.json"
+LOG_AGENTICALLY = "--log_wt.json"
 
 
 class Experiment:
@@ -26,6 +26,8 @@ class Experiment:
         self.log_sufix = log_suffix
 
     def run(self):
+        # Run the dependency parsing agent for every unparsed
+        # sentence found inside the given `data_root` dictionary.
         for sent_path in utils.get_unparsed_sentences(
             self.data_root, UNPARSED, self.new_suffix
         ):
