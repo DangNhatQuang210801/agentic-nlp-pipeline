@@ -150,18 +150,34 @@ class DepParseAgent:
             a `name` and an `arguments` entry.
         """
 
+        _decoder = json.JSONDecoder()
+
         def _parse_arg(value: Any, _depth: int = 0):
             # If value is not a string, return
             if not isinstance(value, str) or _depth > 3:
                 return value
-            # Otherwise try to parse it one way or the other
+            
+            stripped = value.strip()
+            parsed = None
+            
+            # Try strict parse first
             try:
-                parsed = json.loads(value)
+                parsed = json.loads(stripped)
             except json.JSONDecodeError:
+                # Fall back to raw_decode: parses the leading valid JSON value
+                # and ignores trailing junk (e.g. a stray extra "]" or "}")    
                 try:
-                    parsed = ast.literal_eval(value)
-                except (ValueError, SyntaxError):
-                    return value
+                    parsed, end_idx = _decoder.raw_decode(stripped)
+                    leftover = stripped[end_idx:].strip()
+                    if leftover:
+                        print(f"⚠️ Ignored trailing garbage after JSON arg: {leftover!r}")
+                except json.JSONDecodeError:
+                    try:
+                        parsed = ast.literal_eval(stripped)
+                    except (ValueError, SyntaxError):
+                        return value 
+            
+            
             # If we only unwrapped one layer of quoting and still have a string
             # that looks like JSON/Python literal, try again.
             if isinstance(parsed, str) and parsed != value:
