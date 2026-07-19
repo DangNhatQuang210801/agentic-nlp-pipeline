@@ -8,13 +8,13 @@ In this study we use treebanks as a source of supplementary information and alth
 
 == Agentic Tools
 
-The project uses a shared dependency parsing pipeline to compare direct parsing with tool-supported parsing across multiple languages. Sentences are represented as JSON-style lists of token dictionaries at the pipeline boundary and as Stanza Document and Sentence objects internally. This keeps CoNLL-U input, tool arguments, and returned annotations consistent across languages.
+The project uses a shared dependency parsing pipeline to compare direct parsing with tool-supported parsing across multiple languages. Sentences are represented as JSON-style lists of token dictionaries at the pipeline boundary and as Stanza @qi-etal-2020-stanza Document and Sentence objects internally. This keeps CoNLL-U input, tool arguments, and returned annotations consistent across languages.
 
 Four reusable tools provide linguistic evidence and structural checks. The tools are designed in a way so that they can be applied to Vietnamese, German, Taiwanese, Marathi, and Low Saxon, or really all other UD treebanks. This design avoids separate implementations for individual languages.
 
-*Statistical Morphology Lookup Tool.* The tool creates a case insensitive index from each training treebank. For every input token, it returns observed LEMMA, UPOS, and FEATS candidates with frequency counts. The result provides statistical, language specific morphological evidence through one common interface.
+*Statistical Morphology Lookup Tool.* The tool creates a case insensitive index from each training treebank. For every input token, it returns observed `LEMMA`, `UPOS`, and `FEATS` candidates with frequency counts. The result provides statistical, language specific morphological evidence through one common interface.
 
-*Surface Form and Part of Speech Retrieval Tool.* This method compares a query sentence with training sentences through surface form and UPOS sequence overlap. It returns the highest scoring examples with FORM, LEMMA, UPOS, FEATS, HEAD, and DEPREL annotations.
+*Surface Form and Part of Speech Retrieval Tool.* This method compares a query sentence with training sentences through surface form and `UPOS` sequence overlap. It returns the highest scoring examples with `FORM`, `LEMMA`, `UPOS`, `FEATS`, `HEAD`, and `DEPREL` annotations.
 
 *Bag of Words Retrieval Tool.* This method combines multiset word overlap with sentence length similarity. It provides a complementary baseline for example selection and returns complete annotations, including dependency heads and relations.
 
