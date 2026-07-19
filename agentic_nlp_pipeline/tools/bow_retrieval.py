@@ -47,7 +47,7 @@ class BagOfWordsRetrievalTool:
                 "properties": {
                     "language": {
                         "type": "string",
-                        "description": "ISO-3 language code. Options: eng = English, mar = Marathi, nan = Taiwanese, nds = Low German / Low Saxon, vie = Vietnamese",
+                        "description": "ISO-3 language code. Options: eng = English, mar = Marathi, nan = Taiwanese / Chinese, nds = Low German / Low Saxon, vie = Vietnamese",
                     },
                     "tokens": {
                         "type": "array",
