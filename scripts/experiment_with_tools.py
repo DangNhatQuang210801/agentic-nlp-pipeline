@@ -19,13 +19,6 @@ def main():
     repo_root = Path(__file__).resolve().parents[1]
     data_root = repo_root / "data" / "processed" / "eng"
 
-    print("__file__:", __file__)
-    print("repo_root:", repo_root)
-    print("data_root:", data_root)
-    return
-
-
-
 
 
     # Set up agent
