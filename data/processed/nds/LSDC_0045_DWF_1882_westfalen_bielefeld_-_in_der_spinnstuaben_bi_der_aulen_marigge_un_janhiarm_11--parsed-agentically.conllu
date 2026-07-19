@@ -1,0 +1,16 @@
+# sent_id = LSDC_0045_DWF_1882_westfalen_bielefeld_-_in_der_spinnstuaben_bi_der_aulen_marigge_un_janhiarm_11
+# text_orig = Alle lachen harre up, un Wiesken ward raut as Führ.
+# text = Alle lachen harde up, un Wiesken ward roud as vüür.
+1	Alle	al	PRON	_	Case=Nom|Number=Plur|PronType=Tot	2	nsubj	_	lemma_gml=al
+2	lachen	lachen	VERB	_	Mood=Ind|Number=Plur|Person=3|Tense=Past	0	root	_	lemma_gml=lachen¹
+3	harde	harde	ADV	_	_	2	advmod	_	lemma_gml=hā̆rde
+4	up	up	ADP	_	_	2	compound	_	SpaceAfter=No|lemma_gml=up¹
+5	,	,	PUNCT	_	_	4	punct	_	_
+6	un	un	CCONJ	_	_	2	cc	_	lemma_gml=unde²
+7	Wiesken	Wiesken	PROPN	_	Number=Sing	8	nsubj	_	_
+8	ward	werden	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Past	6	conj	_	lemma_gml=wērden¹
+9	roud	roud	ADJ	_	Degree=Pos	7	xcomp	_	lemma_gml=rôt⁴
+10	as	as	ADP	_	_	8	case	_	lemma_gml=alsô
+11	vüür	vüür	NOUN	_	Case=Nom|Gender=Neut|Number=Sing	10	nmod	_	SpaceAfter=No|lemma_gml=vü̂r¹
+12	.	.	PUNCT	_	_	11	punct	_	_
+
