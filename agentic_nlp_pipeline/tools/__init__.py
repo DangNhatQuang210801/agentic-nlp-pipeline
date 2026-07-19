@@ -3,6 +3,8 @@ from .bow_retrieval import BagOfWordsRetrievalTool
 from .knn_retrieval import KNNRetrievalTool
 from .morphology_lookup import StatisticalMorphologyLookupTool
 from .tree_validation import TreeValidationTool
+from .defer import DeferTool
+
 
 __all__ = [
     "AgentTool",
@@ -10,4 +12,5 @@ __all__ = [
     "StatisticalMorphologyLookupTool",
     "KNNRetrievalTool",
     "TreeValidationTool",
+    "DeferTool"
 ]

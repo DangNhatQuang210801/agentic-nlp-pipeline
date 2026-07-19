@@ -6,6 +6,7 @@ from typing import Callable, Any
 from urllib import response
 
 import regex as re
+from sklearn import tree
 from stanza.models.common.doc import Sentence
 from ..models import LanguageModel
 
@@ -64,16 +65,23 @@ class DepParseAgent:
         for msg in messages:
             self._print_msg(msg)
 
+        expected_ids = {w.id for w in sent.words}
+        
         for _ in range(self.max_iters_per_call):
             messages = self._run_iteration(messages)
             self._update_stats(messages)
             if messages[-1]["role"] != "tool":
-                break
+                    break
 
         self._log_run(messages, log_dir, log_file_name)
         self._update_stats(messages)
 
         tree = self._parse_dep_tree(messages[-1]["content"])
+        covered_ids = {edge.get("id") for edge in tree}
+        missing = {w.id for w in sent.words} - covered_ids
+        if missing:
+            print(f"⚠️ Incomplete parse: nodes {sorted(missing)} have no head.")
+
         for word, edge in zip(sent.words, tree):
             word.head = edge["head"]
 

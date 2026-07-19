@@ -10,6 +10,7 @@ from agentic_nlp_pipeline.tools import (
     KNNRetrievalTool,
     StatisticalMorphologyLookupTool,
     TreeValidationTool,
+    DeferTool,
 )
 
 
@@ -50,6 +51,7 @@ def main():
     agent.register_tool(*KNNRetrievalTool(treebanks).as_agent_tool())
     agent.register_tool(*StatisticalMorphologyLookupTool(treebanks).as_agent_tool())
     agent.register_tool(*TreeValidationTool.as_agent_tool())
+    agent.register_tool(*DeferTool.as_agent_tool())
 
     # Set up Experiment
     experiment = Experiment(
