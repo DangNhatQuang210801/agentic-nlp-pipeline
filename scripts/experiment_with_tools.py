@@ -17,7 +17,7 @@ from agentic_nlp_pipeline.tools import (
 def main():
     # Find root dir
     repo_root = Path(__file__).resolve().parents[1]
-    data_root = repo_root / "data" / "processed" / "eng"
+    data_root = repo_root / "data" / "processed" / "nds"
 
 
 
