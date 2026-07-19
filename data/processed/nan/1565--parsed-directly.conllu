@@ -1,0 +1,8 @@
+# sent_id = 1565
+# text = 太陽看見了很高興
+1	太陽	_	NOUN	Nab	_	2	nsubj	_	_
+2	看見	_	VERB	VE2	_	0	root	_	_
+3	了	_	AUX	Di	_	2	aux_aspect	_	_
+4	很	_	ADV	Dfa	_	5	advmod	_	_
+5	高興	_	VERB	VK1	_	2	xcomp	_	_
+

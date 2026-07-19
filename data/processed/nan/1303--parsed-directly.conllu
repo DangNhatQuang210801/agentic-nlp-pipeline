@@ -1,0 +1,8 @@
+# sent_id = 1303
+# text = 這樣才能融入大自然
+1	這樣	_	VERB	VH11	_	4	advmod	_	_
+2	才	_	ADV	Dd	_	4	advmod	_	_
+3	能	_	AUX	Dbab	_	4	aux	_	_
+4	融入	_	VERB	VC33	_	0	root	_	_
+5	大自然	_	NOUN	Ncb	_	4	obj	_	_
+
