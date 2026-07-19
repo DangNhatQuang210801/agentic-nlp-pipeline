@@ -107,6 +107,19 @@ Expected output:
 - Trust your first well-reasoned analysis.
 - The final answer does not need to be perfect.
 - These guidelines do not apply to the output. As stated above, the final output should ONLY be a JSON array.
-- If a word's morphology is unfamiliar to you (OOV), or its attachment is genuinely unclear even though the word is familiar, call defer(ids, reason) and move on to the next word rather than guessing now.
+- Immediately call defer(ids, reason) if ANY of the following occurs:
+
+1. More than one head attachment appears plausible.
+2. You begin reconsidering a head you have already chosen.
+3. Morphology or POS information is missing or ambiguous.
+4. Retrieved examples do not clearly support a single attachment.
+5. The correct attachment depends on information later in the sentence.
+
+After calling defer:
+- Continue parsing the remaining tokens.
+- Do not continue reasoning about the deferred token.
+- Resolve every deferred token only after reaching the end of the sentence.
+- Every token must have a real head in the final output.
+
 - Once you reach the end of the sentence, go back to every deferred node and resolve it — you may use any available tool to help.
 - Every node must appear with a real head in your final JSON array. defer only postpones a decision; it does not remove the requirement to answer."""
