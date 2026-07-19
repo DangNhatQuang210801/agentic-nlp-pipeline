@@ -19,6 +19,15 @@ def main():
     repo_root = Path(__file__).resolve().parents[1]
     data_root = repo_root / "data" / "processed" / "eng"
 
+    print("__file__:", __file__)
+    print("repo_root:", repo_root)
+    print("data_root:", data_root)
+    return
+
+
+
+
+
     # Set up agent
     model = LocalModel(model_id = "Qwen/Qwen3.5-9B", gguf_file=None, enable_thinking=True)
     agent = DepParseAgent(
@@ -44,7 +53,7 @@ def main():
 
         # dir.name corresponds to ISO-3 language code
         treebanks[dir.name] = CoNLL.conll2doc(train_set_paths[0])
-            
+
 
     # Register tools
     agent.register_tool(*BagOfWordsRetrievalTool(treebanks).as_agent_tool())
