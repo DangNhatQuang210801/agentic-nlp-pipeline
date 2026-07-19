@@ -1,0 +1,58 @@
+---
+title: "Data Analysis"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+parse <- read.csv("../../data/processed/parse.csv", stringsAsFactors = TRUE, sep = "\t")
+```
+
+```{r}
+parse$original_projective = ifelse(parse$original_projective == "True", TRUE, FALSE)
+parse$parsed_successfully = ifelse(parse$parsed_successfully == "True", TRUE, FALSE)
+parse$has_valid_tree_structure = ifelse(parse$has_valid_tree_structure == "True", TRUE, FALSE)
+parse$with_tools = ifelse(parse$with_tools == "True", TRUE, FALSE)
+```
+
+```{r}
+head(parse)
+```
+
+```{r}
+summary(parse)
+```
+
+```{r}
+str(parse)
+```
+
+
+```{r}
+parse_summary <- parse %>%
+  group_by(language, with_tools) %>%
+  summarise(pct_success = mean(parsed_successfully) * 100, .groups = "drop")
+
+ggplot(parse_summary, aes(x = language, y = pct_success, fill = language)) +
+  geom_col() +
+  facet_wrap(
+    ~ with_tools,
+    labeller = as_labeller(c(
+      "TRUE" = "With Tools",
+      "FALSE" = "Without Tools"
+    ))
+  ) +
+  labs(
+    x = "Language",
+    y = "Successfully Parsed",
+    title = "Parsing Success by Language and Tool Use"
+  ) +
+  theme(legend.position = "none")
+  theme_bw()
+```
+
+
+
