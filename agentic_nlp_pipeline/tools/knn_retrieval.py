@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from stanza.models.common.doc import Document, Sentence, TEXT, UPOS
+from stanza.models.common.doc import Document, Sentence
 from stanza.utils.conll import CoNLL
 
 from .utils import (
