@@ -1,0 +1,8 @@
+Code and Instructions
+
+repository: https://github.com/DangNhatQuang210801/agentic-nlp-pipeline
+
+All files in the repository are standalone files
+
+The project uses Poetry for dependency management. All required packages are specified in pyproject.toml. Before running the code, install Poetry and then install the project dependencie
+ 
