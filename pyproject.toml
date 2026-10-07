@@ -1,11 +1,11 @@
 [project]
 name = "agentic-nlp-pipeline"
 version = "0.1.0"
-description = ""
+description = "LLM agent with retrieval and morphology tools for dependency parsing, compared with direct prompting"
 authors = [
-    {name = "Your Name",email = "you@example.com"},
-    {name = "Your Name",email = "you@example.com"},
-    {name = "Your Name",email = "you@example.com"},
+    {name = "Dang Nhat Quang"},
+    {name = "Han Dai"},
+    {name = "Nikhila Gadge"},
     {name = "Jan Raring",email = "janraring@yahoo.de"}
 ]
 readme = "README.md"
